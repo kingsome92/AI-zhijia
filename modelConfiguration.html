@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>大模型配置</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="modelConfiguration.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item"><a href="trafficStatistics.html" class="nav-link">流量统计</a></li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">应用服务配置</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <main class="model-config-container">
+    <div class="page-header">
+      <h1><i class="bi bi-robot"></i> 大模型配置</h1>
+      <p class="subtitle">配置和管理接入的大模型参数</p>
+    </div>
+    
+    <!-- 模型列表区域 -->
+    <div class="config-section">
+      <div class="config-card full-width">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <h2><i class="bi bi-list-ul"></i> 模型列表</h2>
+          <button id="add-model-btn" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> 添加模型
+          </button>
+        </div>
+        <div class="card-body">
+          <div id="model-list-container" class="model-list-container">
+            <!-- 模型列表将在这里动态生成 -->
+            <div class="empty-state">
+              <i class="bi bi-inbox" style="font-size: 3rem; color: var(--gray-400);"></i>
+              <p style="color: var(--gray-500); margin-top: 1rem;">暂无模型，点击"添加模型"开始添加</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- 添加/编辑模型模态框 -->
+  <div id="model-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title"><i class="bi bi-plus-circle"></i> 添加模型</h2>
+        <button class="modal-close" id="modal-close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="model-form">
+          <div class="form-group">
+            <label for="model-name">模型名称 <span class="required">*</span></label>
+            <input type="text" id="model-name" class="form-control" placeholder="例如：GPT-4" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="model-version-input">模型版本 <span class="required">*</span></label>
+            <input type="text" id="model-version-input" class="form-control" placeholder="例如：gpt-4" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="model-provider">提供商</label>
+            <select id="model-provider" class="form-control">
+              <option value="openai">OpenAI</option>
+              <option value="anthropic">Anthropic</option>
+              <option value="meta">Meta</option>
+              <option value="google">Google</option>
+              <option value="other">其他</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="model-description">模型描述</label>
+            <textarea id="model-description" class="form-control" rows="3" placeholder="请输入模型的详细描述..."></textarea>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="model-context-length">上下文长度 (tokens)</label>
+              <input type="number" id="model-context-length" class="form-control" min="512" max="100000" step="512" value="2048">
+            </div>
+            
+            <div class="form-group">
+              <label for="model-temperature">随机性 (Temperature)</label>
+              <input type="number" id="model-temperature" class="form-control" min="0" max="2" step="0.1" value="0.7">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="model-max-tokens">最大输出长度 (tokens)</label>
+              <input type="number" id="model-max-tokens" class="form-control" min="128" max="4096" step="128" value="512">
+            </div>
+            
+            <div class="form-group">
+              <label for="model-top-p">Top-p 采样</label>
+              <input type="number" id="model-top-p" class="form-control" min="0" max="1" step="0.05" value="0.9">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="model-api-key">API Key</label>
+            <input type="password" id="model-api-key" class="form-control" placeholder="请输入API密钥（可选）">
+            <small class="form-text">API密钥将被加密存储</small>
+          </div>
+          
+          <div class="form-group">
+            <label for="model-endpoint">API端点</label>
+            <input type="url" id="model-endpoint" class="form-control" placeholder="https://api.example.com/v1">
+          </div>
+          
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="model-enabled" checked>
+              <span>启用此模型</span>
+            </label>
+          </div>
+          
+          <!-- 基础配置区域 -->
+          <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--gray-200);">
+            <h3 style="font-size: 1.125rem; color: var(--dark-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="bi bi-gear"></i> 基础配置
+            </h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="modal-context-length">上下文长度 (tokens)</label>
+                <input type="range" id="modal-context-length" min="512" max="8192" step="512" value="2048" class="form-control">
+                <div class="range-value">2048</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="modal-temperature">随机性 (Temperature)</label>
+                <input type="range" id="modal-temperature" min="0" max="2" step="0.1" value="0.7" class="form-control">
+                <div class="range-value">0.7</div>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="modal-max-tokens">最大输出长度 (tokens)</label>
+                <input type="range" id="modal-max-tokens" min="128" max="2048" step="128" value="512" class="form-control">
+                <div class="range-value">512</div>
+              </div>
+              
+              <div class="form-group">
+                <label for="modal-top-p">Top-p 采样</label>
+                <input type="range" id="modal-top-p" min="0" max="1" step="0.05" value="0.9" class="form-control">
+                <div class="range-value">0.9</div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="modal-frequency-penalty">重复惩罚</label>
+              <input type="range" id="modal-frequency-penalty" min="0" max="2" step="0.1" value="0.5" class="form-control">
+              <div class="range-value">0.5</div>
+            </div>
+          </div>
+          
+          <!-- 模型测试区域 -->
+          <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--gray-200);">
+            <h3 style="font-size: 1.125rem; color: var(--dark-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="bi bi-terminal"></i> 模型测试
+            </h3>
+            
+            <div class="form-group">
+              <label for="modal-test-prompt">测试提示词</label>
+              <textarea id="modal-test-prompt" class="form-control" rows="3" placeholder="输入测试提示词..."></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="modal-test-response">模型响应</label>
+              <textarea id="modal-test-response" class="form-control" rows="5" placeholder="模型响应将显示在这里..." readonly></textarea>
+            </div>
+            
+            <div class="button-group">
+              <button type="button" id="modal-test-btn" class="btn btn-primary">
+                <i class="bi bi-play-circle"></i> 测试模型
+              </button>
+              <button type="button" id="modal-reset-config-btn" class="btn btn-secondary">
+                <i class="bi bi-arrow-counterclockwise"></i> 恢复默认配置
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="modal-cancel">取消</button>
+        <button type="submit" form="model-form" class="btn btn-primary" id="modal-submit">
+          <i class="bi bi-check-circle"></i> 保存
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 确认删除模态框 -->
+  <div id="delete-modal" class="modal">
+    <div class="modal-content modal-sm">
+      <div class="modal-header">
+        <h2><i class="bi bi-exclamation-triangle"></i> 确认删除</h2>
+        <button class="modal-close" id="delete-modal-close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>确定要删除模型 "<span id="delete-model-name"></span>" 吗？此操作不可恢复。</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="delete-cancel">取消</button>
+        <button type="button" class="btn btn-danger" id="delete-confirm">
+          <i class="bi bi-trash"></i> 确认删除
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <script src="modelConfiguration.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>账号管理 - AI智能体后台管理系统</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="accountManagement.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item"><a href="trafficStatistics.html" class="nav-link">流量统计</a></li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">工具管理</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <main class="account-management-container">
+    <div class="page-header">
+      <h1><i class="bi bi-person-gear"></i> 账号管理</h1>
+      <p class="subtitle">查看和管理所有账号操作记录</p>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-card">
+        <h2><i class="bi bi-funnel"></i> 筛选条件</h2>
+        <div class="filter-controls">
+          <div class="filter-group">
+            <label for="operation-type">操作类型</label>
+            <select id="operation-type">
+              <option value="all">全部</option>
+              <option value="delete">删除账号</option>
+              <option value="disable">禁用账号</option>
+              <option value="enable">启用账号</option>
+              <option value="create">创建账号</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="time-range">时间范围</label>
+            <select id="time-range">
+              <option value="today">今天</option>
+              <option value="week">本周</option>
+              <option value="month">本月</option>
+              <option value="quarter">本季度</option>
+              <option value="year">本年</option>
+              <option value="custom">自定义</option>
+            </select>
+          </div>
+          
+          <div class="filter-group custom-date" style="display: none;">
+            <label for="start-date">开始日期</label>
+            <input type="date" id="start-date">
+            
+            <label for="end-date">结束日期</label>
+            <input type="date" id="end-date">
+          </div>
+          
+          <button class="search-btn" id="search-btn">
+            <i class="bi bi-search"></i> 搜索
+          </button>
+          <button class="reset-btn" id="reset-btn">
+            <i class="bi bi-arrow-counterclockwise"></i> 重置
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="account-records">
+      <div class="records-header">
+        <h2><i class="bi bi-list-check"></i> 账号操作记录</h2>
+        <div class="records-actions">
+          <button class="export-btn" id="export-btn">
+            <i class="bi bi-download"></i> 导出记录
+          </button>
+        </div>
+      </div>
+      
+      <div class="records-table-container">
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>操作ID</th>
+              <th>账号名称</th>
+              <th>操作类型</th>
+              <th>操作时间</th>
+              <th>操作人</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="records-body">
+            <!-- 记录将通过JavaScript动态加载 -->
+          </tbody>
+        </table>
+        
+        <div class="pagination">
+          <button class="pagination-btn" id="prev-page" disabled>
+            <i class="bi bi-chevron-left"></i> 上一页
+          </button>
+          <span class="page-info" id="page-info">1/5</span>
+          <button class="pagination-btn" id="next-page">
+            下一页 <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal" id="restore-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>恢复账号</h3>
+          <button class="close-btn" id="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>您确定要恢复此账号吗？恢复后，该账号将可以正常登录系统。</p>
+          <div class="account-info">
+            <p><strong>账号ID:</strong> <span id="modal-account-id"></span></p>
+            <p><strong>账号名称:</strong> <span id="modal-account-name"></span></p>
+            <p><strong>操作类型:</strong> <span id="modal-operation-type"></span></p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" id="cancel-restore">取消</button>
+          <button class="confirm-btn" id="confirm-restore">确认恢复</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <script src="accountManagement.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>

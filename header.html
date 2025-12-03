@@ -1,0 +1,67 @@
+<div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item dropdown">
+          <a href="trafficStatistics.html" class="nav-link">流量统计 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="trafficStatistics.html#overview-section" class="dropdown-item">用量概况</a></li>
+            <li><a href="trafficStatistics.html#usage-list-section" class="dropdown-item">用量清单</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">应用服务配置</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话主题配置</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

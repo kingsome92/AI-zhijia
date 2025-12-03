@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>仪表盘 - AI智能体后台管理系统</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item"><a href="trafficStatistics.html" class="nav-link">流量统计</a></li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">工具管理</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <main class="dashboard-container">
+    <div class="dashboard-header">
+      <h1><i class="bi bi-speedometer2"></i> 系统概览</h1>
+      <div class="date-selector">
+        <select id="time-range">
+          <option value="today">今日</option>
+          <option value="week" selected>本周</option>
+          <option value="month">本月</option>
+          <option value="year">本年</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background-color: #e3f2fd;">
+          <i class="bi bi-people-fill" style="color: #1976d2;"></i>
+        </div>
+        <div class="stat-info">
+          <h3>用户总数</h3>
+          <p class="stat-value">1,248</p>
+          <p class="stat-change positive"><i class="bi bi-arrow-up"></i> 12% 环比</p>
+        </div>
+        <a href="userManagement.html" class="stat-link">查看详情 <i class="bi bi-arrow-right"></i></a>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background-color: #e8f5e9;">
+          <i class="bi bi-graph-up" style="color: #388e3c;"></i>
+        </div>
+        <div class="stat-info">
+          <h3>调用次数</h3>
+          <p class="stat-value">323,245 </p>
+          <p class="stat-change positive"><i class="bi bi-arrow-up"></i> 8% 环比</p>
+        </div>
+        <a href="trafficStatistics.html" class="stat-link">查看详情 <i class="bi bi-arrow-right"></i></a>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background-color: #fff3e0;">
+          <i class="bi bi-cpu" style="color: #ffa000;"></i>
+        </div>
+        <div class="stat-info">
+          <h3>资源消耗(万tokens)</h3>
+          <p class="stat-value">7000</p>
+          <p class="stat-change negative"><i class="bi bi-arrow-down"></i> 5% 环比</p>
+        </div>
+        <a href="trafficStatistics.html" class="stat-link">查看详情 <i class="bi bi-arrow-right"></i></a>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background-color: #f3e5f5;">
+          <i class="bi bi-chat-left-text" style="color: #8e24aa;"></i>
+        </div>
+        <div class="stat-info">
+          <h3>会话次数</h3>
+          <p class="stat-value">5,672</p>
+          <p class="stat-change positive"><i class="bi bi-arrow-up"></i> 15% 环比</p>
+        </div>
+        <a href="sessionHistory.html" class="stat-link">查看详情 <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="charts-container">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>用户增长趋势</h3>
+          <div class="chart-actions">
+            <button class="btn-icon"><i class="bi bi-download"></i></button>
+            <button class="btn-icon"><i class="bi bi-fullscreen"></i></button>
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="userGrowthChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h3>资源消耗分布</h3>
+          <div class="chart-actions">
+            <button class="btn-icon"><i class="bi bi-download"></i></button>
+            <button class="btn-icon"><i class="bi bi-fullscreen"></i></button>
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="trafficDistributionChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="recent-activity">
+      <div class="activity-header">
+        <h3><i class="bi bi-clock-history"></i> 最近会话记录</h3>
+        <a href="sessionHistory.html" class="view-all">查看全部 <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <div class="activity-list">
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="bi bi-chat-left-text"></i>
+          </div>
+          <div class="activity-content">
+            <p class="activity-title">用户ID: U20230567</p>
+            <p class="activity-desc">询问了关于AI模型训练的问题</p>
+            <p class="activity-time">10分钟前</p>
+          </div>
+          <div class="activity-actions">
+            <button class="btn-sm"><i class="bi bi-eye"></i> 查看</button>
+          </div>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="bi bi-file-earmark-text"></i>
+          </div>
+          <div class="activity-content">
+            <p class="activity-title">用户ID: U20231234</p>
+            <p class="activity-desc">上传了数据文件进行解析</p>
+            <p class="activity-time">25分钟前</p>
+          </div>
+          <div class="activity-actions">
+            <button class="btn-sm"><i class="bi bi-eye"></i> 查看</button>
+          </div>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="bi bi-chat-left-dots"></i>
+          </div>
+          <div class="activity-content">
+            <p class="activity-title">用户ID: U20230123</p>
+            <p class="activity-desc">进行了长时间的对话咨询</p>
+            <p class="activity-time">42分钟前</p>
+          </div>
+          <div class="activity-actions">
+            <button class="btn-sm"><i class="bi bi-eye"></i> 查看</button>
+          </div>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-icon">
+            <i class="bi bi-robot"></i>
+          </div>
+          <div class="activity-content">
+            <p class="activity-title">用户ID: U20229876</p>
+            <p class="activity-desc">测试了智能体任务功能</p>
+            <p class="activity-time">1小时前</p>
+          </div>
+          <div class="activity-actions">
+            <button class="btn-sm"><i class="bi bi-eye"></i> 查看</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+  <script src="https://gcore.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>

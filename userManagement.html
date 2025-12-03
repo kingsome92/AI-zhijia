@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户管理 - AI智能体后台管理系统</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="userManagement.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item"><a href="trafficStatistics.html" class="nav-link">流量统计</a></li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">工具管理</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <main class="container">
+    <div class="page-header">
+      <h1><i class="bi bi-people"></i> 用户管理</h1>
+      <p>管理所有接入平台的终端用户账户</p>
+    </div>
+
+    <!-- 用户设定模块 -->
+    <div class="user-settings-section">
+      <div class="settings-card">
+        <div class="settings-header">
+          <h2><i class="bi bi-gear"></i> 用户设定</h2>
+          <button class="btn primary" id="manage-settings-btn">
+            <i class="bi bi-pencil"></i> 公共字段
+          </button>
+        </div>
+        <div class="settings-content">
+          <div class="settings-group">
+            <label>角色列表：</label>
+            <div class="settings-tags" id="roles-list" style="color: #ffffff;">
+              <span class="tag" style="color: #ffffff;">管理员</span>
+              <span class="tag" style="color: #ffffff;">教师</span>
+              <span class="tag" style="color: #ffffff;">学生</span>
+            </div>
+            </div>
+            <div class="settings-group">
+            <label>类型列表：</label>
+            <div class="settings-tags" id="types-list" style="color: #ffffff;">
+              <span class="tag" style="color: #ffffff;">VIP</span>
+              <span class="tag" style="color: #ffffff;">普通</span>
+              <span class="tag" style="color: #ffffff;">试用</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-panel">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="搜索用户名、邮箱或手机号..." id="search-input">
+      </div>
+      
+      <div class="filter-group">
+        <select id="user-type-filter">
+          <option value="">所有用户类型</option>
+          <option value="teacher">教师</option>
+          <option value="student">学生</option>
+          <option value="admin">管理员</option>
+          <option value="guest">访客</option>
+        </select>
+        
+        <select id="status-filter">
+          <option value="">所有状态</option>
+          <option value="active">活跃</option>
+          <option value="disabled">已禁用</option>
+        </select>
+        
+        <button class="btn primary" id="add-user-btn">
+          <i class="bi bi-plus-lg"></i> 添加用户
+        </button>
+      </div>
+    </div>
+
+    <!-- 批量操作栏 -->
+    <div class="batch-operations" id="batch-operations" style="display: none;">
+      <div class="batch-info">
+        <span id="selected-count">已选择 0 个用户</span>
+      </div>
+      <div class="batch-actions">
+        <select id="batch-role-select" class="batch-select">
+          <option value="">批量设置角色</option>
+        </select>
+        <select id="batch-type-select" class="batch-select">
+          <option value="">批量设置类型</option>
+        </select>
+        <button class="btn success" id="batch-enable-btn">
+          <i class="bi bi-check-circle"></i> 批量启用
+        </button>
+        <button class="btn warning" id="batch-disable-btn">
+          <i class="bi bi-slash-circle"></i> 批量禁用
+        </button>
+        <button class="btn danger" id="batch-delete-btn">
+          <i class="bi bi-trash"></i> 批量删除
+        </button>
+        <button class="btn" id="cancel-batch-btn">
+          <i class="bi bi-x"></i> 取消选择
+        </button>
+      </div>
+    </div>
+
+    <div class="user-table-container">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>
+              <input type="checkbox" id="select-all-checkbox" title="全选">
+            </th>
+            <th>用户ID</th>
+            <th>用户名</th>
+            <th>邮箱</th>
+            <th>手机号</th>
+            <th>级别</th>
+            <th>角色</th>
+            <th>类型</th>
+            <th>来源</th>
+            <th>注册时间</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="user-table-body">
+          <!-- 用户数据将通过JavaScript动态加载 -->
+        </tbody>
+      </table>
+      
+      <div class="pagination">
+        <button class="btn" id="prev-page"><i class="bi bi-chevron-left"></i></button>
+        <span id="page-info">1/5</span>
+        <button class="btn" id="next-page"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+  <!-- 管理公共字段模态框 -->
+  <div class="modal" id="settings-modal">
+    <div class="modal-content settings-modal-content">
+      <div class="modal-header">
+        <h3>管理公共字段</h3>
+        <button class="close-btn" id="close-settings-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-form-section">
+          <h4>角色管理</h4>
+          <div class="settings-form-group">
+            <input type="text" id="new-role-input" placeholder="输入新角色名称">
+            <button type="button" class="btn primary" id="add-role-btn">
+              <i class="bi bi-plus"></i> 添加角色
+            </button>
+          </div>
+          <div class="settings-list" id="roles-management-list">
+            <!-- 角色列表将通过JavaScript动态加载 -->
+          </div>
+        </div>
+        <div class="settings-form-section">
+          <h4>类型管理</h4>
+          <div class="settings-form-group">
+            <input type="text" id="new-type-input" placeholder="输入新类型名称">
+            <button type="button" class="btn primary" id="add-type-btn">
+              <i class="bi bi-plus"></i> 添加类型
+            </button>
+          </div>
+          <div class="settings-list" id="types-management-list">
+            <!-- 类型列表将通过JavaScript动态加载 -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="cancel-settings-btn">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加用户模态框 -->
+  <div class="modal" id="add-user-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>添加新用户</h3>
+        <button class="close-btn" id="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="add-user-form">
+          <div class="form-group">
+            <label for="username">用户名</label>
+            <input type="text" id="username" required>
+          </div>
+          <div class="form-group">
+            <label for="email">邮箱</label>
+            <input type="email" id="email" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">手机号</label>
+            <input type="tel" id="phone" placeholder="请输入手机号">
+          </div>
+          <div class="form-group">
+            <label for="level">级别</label>
+            <input type="number" id="level" value="0" min="0" required>
+          </div>
+          <div class="form-group">
+            <label for="user-role">角色</label>
+            <select id="user-role" required>
+              <option value="">请选择角色</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="user-type">类型</label>
+            <select id="user-type" required>
+              <option value="">请选择类型</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="password">初始密码</label>
+            <input type="password" id="password" required>
+          </div>
+          <button type="submit" class="btn primary">创建用户</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="userManagement.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>

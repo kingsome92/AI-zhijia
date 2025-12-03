@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>资源管理 - AI智能体后台管理系统</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="resourceManagement.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item"><a href="trafficStatistics.html" class="nav-link">流量统计</a></li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">工具管理</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <main class="resource-container">
+    <div class="page-header">
+      <h1><i class="bi bi-graph-up"></i> 资源管理</h1>
+      <div class="breadcrumb">
+        <span>首页</span>
+        <i class="bi bi-chevron-right"></i>
+        <span class="current">资源管理</span>
+      </div>
+    </div>
+
+    <div class="resource-controls">
+      <div class="filter-section">
+        <div class="filter-group">
+          <label for="resource-type"><i class="bi bi-funnel"></i> 资源类型</label>
+          <select id="resource-type">
+            <option value="all">全部资源</option>
+            <option value="cpu">CPU</option>
+            <option value="memory">内存</option>
+            <option value="storage">存储</option>
+            <option value="network">网络</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="time-range"><i class="bi bi-calendar"></i> 时间范围</label>
+          <select id="time-range">
+            <option value="today">今日</option>
+            <option value="week" selected>本周</option>
+            <option value="month">本月</option>
+            <option value="quarter">本季度</option>
+            <option value="year">本年</option>
+            <option value="custom">自定义</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="agent-filter"><i class="bi bi-robot"></i> 智能体筛选</label>
+          <select id="agent-filter">
+            <option value="all">全部智能体</option>
+            <option value="chatbot">聊天机器人</option>
+            <option value="nlp">自然语言处理</option>
+            <option value="cv">计算机视觉</option>
+            <option value="recommend">推荐系统</option>
+          </select>
+        </div>
+        
+        <button class="btn primary" id="apply-filters">
+          <i class="bi bi-check-circle"></i> 应用筛选
+        </button>
+        <button class="btn secondary" id="generate-report">
+          <i class="bi bi-file-earmark-bar-graph"></i> 生成报告
+        </button>
+      </div>
+    </div>
+
+    <div class="resource-overview">
+      <div class="overview-card">
+        <div class="card-header">
+          <i class="bi bi-cpu"></i>
+          <h3 style="color: #f1f4f7;">CPU使用率</h3>
+        </div>
+        <div class="card-body">
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 65%; background-color: #8eb2d8;">
+              <span>65%</span>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-label">峰值</span>
+              <span class="stat-value">78%</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">平均</span>
+              <span class="stat-value">52%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="overview-card">
+        <div class="card-header">
+          <i class="bi bi-memory"></i>
+          <h3 style="color: #f1f4f7;">内存使用</h3>
+        </div>
+        <div class="card-body">
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 48%; background-color: #f28e2b;">
+              <span>48%</span>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-label">已用</span>
+              <span class="stat-value">7.2GB</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">剩余</span>
+              <span class="stat-value">7.8GB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="overview-card">
+        <div class="card-header">
+          <i class="bi bi-hdd"></i>
+          <h3 style="color: #f1f4f7;">存储空间</h3>
+        </div>
+        <div class="card-body">
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 82%; background-color: #e15759;">
+              <span>82%</span>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-label">已用</span>
+              <span class="stat-value">820GB</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">剩余</span>
+              <span class="stat-value">180GB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="overview-card">
+        <div class="card-header">
+          <i class="bi bi-wifi"></i>
+          <h3 style="color: #f1f4f7;">网络流量</h3>
+        </div>
+        <div class="card-body">
+          <div class="progress-container">
+            <div class="progress-bar" style="width: 34%; background-color: #76b7b2;">
+              <span>34%</span>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-label">上行</span>
+              <span class="stat-value">1.2TB</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">下行</span>
+              <span class="stat-value">2.8TB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="resource-details">
+      <div class="section-header">
+        <h2><i class="bi bi-table"></i> 资源消耗详情</h2>
+        <div class="section-actions">
+          <button class="btn secondary" id="export-data">
+            <i class="bi bi-download"></i> 导出数据
+          </button>
+          <button class="btn secondary" id="refresh-data">
+            <i class="bi bi-arrow-clockwise"></i> 刷新
+          </button>
+        </div>
+      </div>
+      
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>智能体</th>
+              <th>资源类型</th>
+              <th>使用量</th>
+              <th>占比</th>
+              <th>峰值时间</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>聊天机器人</td>
+              <td>CPU</td>
+              <td>32%</td>
+              <td>
+                <div class="usage-bar">
+                  <div class="bar" style="width: 32%; background-color: #4e79a7;"></div>
+                </div>
+              </td>
+              <td>2023-06-15 14:30</td>
+              <td><span class="status-badge normal">正常</span></td>
+              <td>
+                <button class="btn icon"><i class="bi bi-info-circle"></i></button>
+                <button class="btn icon"><i class="bi bi-gear"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>自然语言处理</td>
+              <td>内存</td>
+              <td>18GB</td>
+              <td>
+                <div class="usage-bar">
+                  <div class="bar" style="width: 45%; background-color: #f28e2b;"></div>
+                </div>
+              </td>
+              <td>2023-06-16 09:15</td>
+              <td><span class="status-badge warning">警告</span></td>
+              <td>
+                <button class="btn icon"><i class="bi bi-info-circle"></i></button>
+                <button class="btn icon"><i class="bi bi-gear"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>计算机视觉</td>
+              <td>存储</td>
+              <td>420GB</td>
+              <td>
+                <div class="usage-bar">
+                  <div class="bar" style="width: 68%; background-color: #e15759;"></div>
+                </div>
+              </td>
+              <td>2023-06-14 16:45</td>
+              <td><span class="status-badge critical">临界</span></td>
+              <td>
+                <button class="btn icon"><i class="bi bi-info-circle"></i></button>
+                <button class="btn icon"><i class="bi bi-gear"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>推荐系统</td>
+              <td>网络</td>
+              <td>1.5TB</td>
+              <td>
+                <div class="usage-bar">
+                  <div class="bar" style="width: 28%; background-color: #76b7b2;"></div>
+                </div>
+              </td>
+              <td>2023-06-13 11:20</td>
+              <td><span class="status-badge normal">正常</span></td>
+              <td>
+                <button class="btn icon"><i class="bi bi-info-circle"></i></button>
+                <button class="btn icon"><i class="bi bi-gear"></i></button>
+              </td>
+            </tr>
+            <tr>
+              <td>聊天机器人</td>
+              <td>内存</td>
+              <td>12GB</td>
+              <td>
+                <div class="usage-bar">
+                  <div class="bar" style="width: 30%; background-color: #f28e2b;"></div>
+                </div>
+              </td>
+              <td>2023-06-16 10:30</td>
+              <td><span class="status-badge normal">正常</span></td>
+              <td>
+                <button class="btn icon"><i class="bi bi-info-circle"></i></button>
+                <button class="btn icon"><i class="bi bi-gear"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="pagination">
+        <button class="btn icon" disabled><i class="bi bi-chevron-left"></i></button>
+        <button class="btn active">1</button>
+        <button class="btn">2</button>
+        <button class="btn">3</button>
+        <span class="ellipsis">...</span>
+        <button class="btn">5</button>
+        <button class="btn icon"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </div>
+    
+    <div class="resource-charts">
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3><i class="bi bi-bar-chart"></i> CPU使用趋势</h3>
+          <div class="chart-actions">
+            <select class="chart-time">
+              <option>24小时</option>
+              <option selected>7天</option>
+              <option>30天</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-body">
+          <img loading="lazy" src="https://placeholder.pics/svg/800x300/DEDEDE/555555/CPU使用趋势图表" alt="CPU使用趋势图表">
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3><i class="bi bi-pie-chart"></i> 内存分配比例</h3>
+          <div class="chart-actions">
+            <select class="chart-time">
+              <option>24小时</option>
+              <option selected>7天</option>
+              <option>30天</option>
+            </select>
+          </div>
+        </div>
+        <div class="chart-body">
+          <img loading="lazy" src="https://placeholder.pics/svg/800x300/DEDEDE/555555/内存分配比例图表" alt="内存分配比例图表">
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+  <script src="resourceManagement.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>

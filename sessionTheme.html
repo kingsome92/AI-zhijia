@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>会话管理</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="sessionTheme.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item"><a href="trafficStatistics.html" class="nav-link">流量统计</a></li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">工具管理</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <main class="container">
+    <div class="page-header">
+      <h1><i class="bi bi-chat-square-text"></i> 会话管理</h1>
+      <p>配置会话功能参数，管理模板和内容策略</p>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="secondary-tabs">
+        <div class="tab-list">
+          <button class="tab-button active" data-tab="settings">
+            <i class="bi bi-sliders"></i>
+            <span>会话设置</span>
+          </button>
+          <button class="tab-button" data-tab="content">
+            <i class="bi bi-shield-check"></i>
+            <span>内容管理</span>
+          </button>
+        </div>
+        <div class="tab-panels">
+          <div class="tab-panel active" id="tab-settings">
+            <div class="config-section">
+              <div class="section-header">
+                <h2><i class="bi bi-collection"></i> 模板管理</h2>
+                <p class="section-subtitle">以模板为中心管理会话配置，每个模板包含完整的基本配置、功能配置和会话属性</p>
+              </div>
+              
+              <div class="template-actions">
+                <div class="template-select">
+                  <label for="template">选择模板</label>
+                  <select id="template">
+                    <option value="" disabled>-- 选择模板 --</option>
+                    <option value="default" selected>默认配置</option>
+                    <option value="minimal">最小功能集</option>
+                    <option value="full">完整功能集</option>
+                    <option value="custom1">客服质检模板</option>
+                    <option value="custom2">学习助理模板</option>
+                  </select>
+                </div>
+                
+                <div class="template-buttons">
+                  <button class="btn btn-primary" id="addTemplate">
+                    <i class="bi bi-plus-circle"></i> 新增模板
+                  </button>
+                  <button class="btn btn-secondary" id="applyTemplate">
+                    <i class="bi bi-check-circle"></i> 应用模板
+                  </button>
+                  <button class="btn btn-primary" id="editTemplate">
+                    <i class="bi bi-pencil-square"></i> 在线编辑
+                  </button>
+                  <button class="btn btn-primary" id="saveTemplate">
+                    <i class="bi bi-save"></i> 保存为模板
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 模板配置区域（当选择模板后显示） -->
+              <div id="templateConfigArea" class="template-config-area">
+                <!-- 基本配置 -->
+                <div class="template-subsection">
+                  <div class="subsection-header">
+                    <h3><i class="bi bi-sliders"></i> 基本配置</h3>
+                  </div>
+                  
+                  <div class="config-form">
+                    <div class="form-group">
+                      <label for="sessionLimit">会话数量限制</label>
+                      <div class="input-group">
+                        <input type="number" id="sessionLimit" min="1" max="100" value="10">
+                        <span class="input-suffix">个/用户</span>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="sessionDuration">会话持续时间</label>
+                      <div class="input-group">
+                        <input type="number" id="sessionDuration" min="5" max="1440" value="30">
+                        <span class="input-suffix">分钟</span>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="historyRetention">历史记录保留</label>
+                      <div class="input-group">
+                        <input type="number" id="historyRetention" min="1" max="365" value="30">
+                        <span class="input-suffix">天</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- 功能配置 -->
+                <div class="template-subsection">
+                  <div class="subsection-header">
+                    <h3><i class="bi bi-gear"></i> 功能配置</h3>
+                  </div>
+                  
+                  <div class="feature-toggle-group">
+                    <div class="toggle-item">
+                      <div class="toggle-info">
+                        <h3>文件上传功能</h3>
+                        <p>允许用户在会话中上传文件</p>
+                      </div>
+                      <label class="toggle-switch">
+                        <input type="checkbox" checked data-feature="fileUpload">
+                        <span class="slider"></span>
+                      </label>
+                    </div>
+                    
+                    <div class="toggle-item">
+                      <div class="toggle-info">
+                        <h3>语音输入功能</h3>
+                        <p>允许用户使用语音输入</p>
+                      </div>
+                      <label class="toggle-switch">
+                        <input type="checkbox" data-feature="voiceInput">
+                        <span class="slider"></span>
+                      </label>
+                    </div>
+                    
+                    <div class="toggle-item">
+                      <div class="toggle-info">
+                        <h3>多语言切换</h3>
+                        <p>允许用户在会话中切换语言</p>
+                      </div>
+                      <label class="toggle-switch">
+                        <input type="checkbox" checked data-feature="multiLanguage">
+                        <span class="slider"></span>
+                      </label>
+                    </div>
+                    
+                    <div class="toggle-item">
+                      <div class="toggle-info">
+                        <h3>上下文记忆</h3>
+                        <p>保留会话上下文信息</p>
+                      </div>
+                      <label class="toggle-switch">
+                        <input type="checkbox" checked data-feature="contextMemory">
+                        <span class="slider"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- 会话属性与预览 -->
+                <div class="template-subsection session-attributes">
+                  <div class="subsection-header">
+                    <h3><i class="bi bi-layout-text-window"></i> 会话属性与模板预览</h3>
+                    <p class="section-subtitle">模板参数调整会自动映射到会话属性与 Demo 预览</p>
+                  </div>
+                  <div class="attributes-preview-grid">
+                    <div class="attributes-form">
+                      <div class="form-group">
+                        <label for="assistantName">助手名称</label>
+                        <input type="text" id="assistantName" class="form-control" placeholder="如：智加助手">
+                      </div>
+                      <div class="form-group">
+                        <label for="assistantPersona">助手角色定位</label>
+                        <input type="text" id="assistantPersona" class="form-control" placeholder="例如：企业知识库顾问">
+                      </div>
+                      <div class="form-group">
+                        <label for="conversationTone">对话语气</label>
+                        <select id="conversationTone" class="form-control">
+                          <option value="professional">专业严谨</option>
+                          <option value="friendly">亲切友好</option>
+                          <option value="creative">灵感激发</option>
+                        </select>
+                      </div>
+                      <div class="form-group color-picker-group">
+                        <label for="themeColor">主题色</label>
+                        <input type="color" id="themeColor" value="#3a86ff">
+                        <span class="color-hex" id="themeColorValue">#3A86FF</span>
+                      </div>
+                      <div class="form-group">
+                        <label for="openingMessage">开场提示语</label>
+                        <textarea id="openingMessage" class="form-control" rows="3" placeholder="示例：您好，我是您的智能助手，可以为您..."></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="inputPlaceholder">输入框提示语</label>
+                        <input type="text" id="inputPlaceholder" class="form-control" placeholder="请描述您的问题...">
+                      </div>
+                    </div>
+                    <div class="preview-panel">
+                      <div class="preview-header">
+                        <div>
+                          <h3>模板 Demo</h3>
+                          <p>AI Elements Chat Window 样式实时预览</p>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="refreshPreview">
+                          <i class="bi bi-arrow-repeat"></i> 刷新预览
+                        </button>
+                      </div>
+                      <div class="ai-chat-shell">
+                        <div class="ai-chat-window" id="aiChatPreview">
+                          <!-- AI Elements conversation 组件将在这里渲染 -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 新增模板模态框 -->
+            <div id="addTemplateModal" class="modal">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3><i class="bi bi-plus-circle"></i> 新增模板</h3>
+                  <span class="modal-close">&times;</span>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="newTemplateName">模板名称 <span class="required">*</span></label>
+                    <input type="text" id="newTemplateName" class="form-control" placeholder="请输入模板名称">
+                  </div>
+                  <div class="form-group">
+                    <label for="newTemplateDescription">模板描述</label>
+                    <textarea id="newTemplateDescription" class="form-control" rows="3" placeholder="请输入模板描述（可选）"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="newTemplateBase">基于模板</label>
+                    <select id="newTemplateBase" class="form-control">
+                      <option value="">空白模板</option>
+                      <option value="default">默认配置</option>
+                      <option value="minimal">最小功能集</option>
+                      <option value="full">完整功能集</option>
+                    </select>
+                    <small class="form-text">选择基于现有模板创建，或从空白模板开始</small>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-secondary" id="cancelAddTemplate">取消</button>
+                  <button class="btn btn-primary" id="confirmAddTemplate">创建模板</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 模板编辑器模态框 -->
+            <div id="templateEditorModal" class="modal">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3><i class="bi bi-pencil-square"></i> 在线编辑模板</h3>
+                  <span class="modal-close">&times;</span>
+                </div>
+                <div class="modal-body">
+                  <div class="editor-toolbar">
+                    <label for="templateName">模板名称：</label>
+                    <input type="text" id="templateName" placeholder="请输入模板名称" class="template-name-input">
+                    <div class="editor-actions">
+                      <button class="btn btn-secondary" id="previewTemplate">
+                        <i class="bi bi-eye"></i> 预览
+                      </button>
+                      <button class="btn btn-primary" id="saveTemplateContent">
+                        <i class="bi bi-save"></i> 保存
+                      </button>
+                    </div>
+                  </div>
+                  <textarea id="templateEditor" class="template-editor" placeholder="在此编辑模板内容..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          
+          <div class="tab-panel" id="tab-content">
+            <div class="config-section">
+              <div class="section-header">
+                <h2><i class="bi bi-shield-check"></i> 内容管理</h2>
+              </div>
+        
+            <!-- 违禁词处理策略 -->
+            <div class="content-strategy">
+              <h3 class="subsection-title">违禁词处理策略</h3>
+              <div class="strategy-options">
+                <label class="strategy-option">
+                  <input type="radio" name="forbiddenWordStrategy" value="replace" checked>
+                  <div class="strategy-content">
+                    <strong>策略1:替换处理</strong>
+                    <p>违禁词用"***"代替</p>
+                  </div>
+                </label>
+                <label class="strategy-option">
+                  <input type="radio" name="forbiddenWordStrategy" value="reject">
+                  <div class="strategy-content">
+                    <strong>策略2：拒绝处理</strong>
+                    <p>系统会话返回"您的提问包含违禁内容，请重新开始"</p>
+                  </div>
+                </label>
+              </div>
+            </div>
+            
+            <!-- 违禁词词库管理 -->
+            <div class="forbidden-words-section">
+              <div class="words-header">
+                <h3 class="subsection-title">违禁词词库维护</h3>
+                <div class="words-actions">
+                  <button class="btn btn-primary" id="addWordBtn">
+                    <i class="bi bi-plus-circle"></i> 添加违禁词
+                  </button>
+                  <button class="btn btn-secondary" id="importWordsBtn">
+                    <i class="bi bi-upload"></i> 批量导入
+                  </button>
+                  <button class="btn btn-secondary" id="exportWordsBtn">
+                    <i class="bi bi-download"></i> 批量导出
+                  </button>
+                  <button class="btn btn-danger" id="clearWordsBtn">
+                    <i class="bi bi-trash"></i> 清空词库
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 搜索和筛选 -->
+              <div class="words-filter">
+                <div class="search-box">
+                  <input type="text" id="wordSearch" placeholder="搜索违禁词..." class="search-input">
+                  <i class="bi bi-search search-icon"></i>
+                </div>
+                <div class="filter-options">
+                  <label>
+                    <input type="checkbox" id="showCategoryFilter"> 按分类筛选
+                  </label>
+                  <select id="categoryFilter" class="category-select" disabled>
+                    <option value="">全部分类</option>
+                    <option value="violence">暴力</option>
+                    <option value="pornography">色情</option>
+                    <option value="politics">政治</option>
+                    <option value="advertising">广告</option>
+                    <option value="other">其他</option>
+                  </select>
+                </div>
+              </div>
+              
+              <!-- 违禁词列表 -->
+              <div class="words-table-container">
+                <table class="words-table">
+                  <thead>
+                    <tr>
+                      <th>
+                        <input type="checkbox" id="selectAllWords">
+                      </th>
+                      <th>序号</th>
+                      <th>违禁词</th>
+                      <th>分类</th>
+                      <th>添加时间</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="wordsTableBody">
+                    <!-- 动态生成 -->
+                  </tbody>
+                </table>
+              </div>
+              
+              <!-- 分页 -->
+              <div class="words-pagination">
+                <div class="pagination-info">
+                  显示 <span id="currentPageStart">1</span>-<span id="currentPageEnd">10</span> 条，共 <span id="totalWords">0</span> 条
+                </div>
+                <div class="pagination-controls">
+                  <button class="btn btn-secondary" id="prevPage" disabled>上一页</button>
+                  <span class="page-numbers" id="pageNumbers"></span>
+                  <button class="btn btn-secondary" id="nextPage">下一页</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 添加/编辑违禁词模态框 -->
+            <div id="wordModal" class="modal">
+              <div class="modal-content modal-small">
+                <div class="modal-header">
+                  <h3 id="wordModalTitle"><i class="bi bi-plus-circle"></i> 添加违禁词</h3>
+                  <span class="modal-close">&times;</span>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="wordInput">违禁词 <span class="required">*</span></label>
+                    <input type="text" id="wordInput" placeholder="请输入违禁词" class="form-control">
+                    <small class="form-text">支持单个词或短语，多个词请用换行分隔</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="wordCategory">分类</label>
+                    <select id="wordCategory" class="form-control">
+                      <option value="violence">暴力</option>
+                      <option value="pornography">色情</option>
+                      <option value="politics">政治</option>
+                      <option value="advertising">广告</option>
+                      <option value="other" selected>其他</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="wordRemark">备注</label>
+                    <textarea id="wordRemark" placeholder="可选：添加备注信息" class="form-control" rows="3"></textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-secondary" id="cancelWordBtn">取消</button>
+                  <button class="btn btn-primary" id="saveWordBtn">保存</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 批量导入模态框 -->
+            <div id="importModal" class="modal">
+              <div class="modal-content modal-small">
+                <div class="modal-header">
+                  <h3><i class="bi bi-upload"></i> 批量导入违禁词</h3>
+                  <span class="modal-close">&times;</span>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label>导入方式</label>
+                    <div class="import-options">
+                      <label class="import-option">
+                        <input type="radio" name="importType" value="text" checked>
+                        <span>文本输入</span>
+                      </label>
+                      <label class="import-option">
+                        <input type="radio" name="importType" value="file">
+                        <span>文件上传</span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group" id="textImportArea">
+                    <label for="importText">违禁词列表 <span class="required">*</span></label>
+                    <textarea id="importText" placeholder="每行一个违禁词，支持批量输入" class="form-control" rows="10"></textarea>
+                    <small class="form-text">每行输入一个违禁词，系统会自动识别</small>
+                  </div>
+                  <div class="form-group" id="fileImportArea" style="display: none;">
+                    <label for="importFile">选择文件 <span class="required">*</span></label>
+                    <input type="file" id="importFile" accept=".txt,.csv" class="form-control">
+                    <small class="form-text">支持 .txt 或 .csv 格式，每行一个违禁词</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="importCategory">默认分类</label>
+                    <select id="importCategory" class="form-control">
+                      <option value="other" selected>其他</option>
+                      <option value="violence">暴力</option>
+                      <option value="pornography">色情</option>
+                      <option value="politics">政治</option>
+                      <option value="advertising">广告</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button class="btn btn-secondary" id="cancelImportBtn">取消</button>
+                  <button class="btn btn-primary" id="confirmImportBtn">导入</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn btn-secondary" id="resetBtn">
+          <i class="bi bi-arrow-counterclockwise"></i> 重置
+        </button>
+        <button class="btn btn-primary" id="saveBtn">
+          <i class="bi bi-check-lg"></i> 保存配置
+        </button>
+      </div>
+    </div>
+  </main>
+  
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <script src="sessionTheme.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>

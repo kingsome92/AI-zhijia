@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>会话记录 - AI智能体后台管理系统</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="sessionHistory.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item"><a href="trafficStatistics.html" class="nav-link">流量统计</a></li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">工具管理</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <main class="session-history-container">
+    <div class="page-header">
+      <h1><i class="bi bi-chat-left-text"></i> 会话记录</h1>
+      <div class="breadcrumb">
+        <span>首页</span>
+        <i class="bi bi-chevron-right"></i>
+        <span class="current">会话记录</span>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-group">
+        <label for="user-account-filter"><i class="bi bi-person"></i> 用户账号</label>
+        <input type="text" id="user-account-filter" class="filter-input" placeholder="输入用户账号进行查询">
+      </div>
+      
+      <div class="filter-group">
+        <label for="date-filter"><i class="bi bi-calendar"></i> 时间范围</label>
+        <select id="date-filter" class="filter-select">
+          <option value="all">全部时间</option>
+          <option value="today">今天</option>
+          <option value="week">本周</option>
+          <option value="month">本月</option>
+          <option value="custom">自定义</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="type-filter"><i class="bi bi-tag"></i> 会话类型</label>
+        <select id="type-filter" class="filter-select">
+          <option value="">全部类型</option>
+          <option value="text">文本对话</option>
+          <option value="voice">语音对话</option>
+          <option value="file">文件处理</option>
+        </select>
+      </div>
+      
+      <button class="search-btn"><i class="bi bi-search"></i> 筛选</button>
+      <button class="export-btn"><i class="bi bi-download"></i> 导出</button>
+    </div>
+
+    <div class="session-list-container">
+      <div class="session-list-header">
+        <div class="session-info">会话信息</div>
+        <div class="session-user">用户</div>
+        <div class="session-time">时间</div>
+        <div class="session-type">类型</div>
+        <div class="session-violation">是否违禁</div>
+        <div class="session-actions">操作</div>
+      </div>
+      
+      <div class="session-list">
+        <!-- 会话记录项将通过JavaScript动态生成 -->
+      </div>
+      
+      <div class="pagination">
+        <button class="pagination-btn" disabled><i class="bi bi-chevron-left"></i></button>
+        <button class="pagination-btn active">1</button>
+        <button class="pagination-btn">2</button>
+        <button class="pagination-btn">3</button>
+        <button class="pagination-btn"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </div>
+    
+    <!-- 违禁内容查看模态框 -->
+    <div id="violation-modal" class="modal">
+      <div class="modal-content violation-modal-content">
+        <div class="modal-header">
+          <h2>违禁内容详情</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="violation-detail" id="violation-detail-content">
+            <!-- 违禁内容将通过JavaScript动态生成 -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn close-modal-btn">关闭</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 文件/图片查看模态框 -->
+    <div id="file-viewer-modal" class="modal">
+      <div class="modal-content file-viewer-modal-content">
+        <div class="modal-header">
+          <h2 id="file-viewer-title">文件查看</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="file-viewer-content" id="file-viewer-content">
+            <!-- 文件/图片内容将通过JavaScript动态生成 -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn export-file-btn" id="export-file-btn" style="display: none;">
+            <i class="bi bi-download"></i> 导出文件
+          </button>
+          <button class="modal-btn close-modal-btn">关闭</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 会话详情模态框 -->
+    <div id="session-detail-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>会话详情</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="detail-section">
+            <h3>基本信息</h3>
+            <div class="detail-row">
+              <span class="detail-label">用户ID:</span>
+              <span class="detail-value" id="detail-user-id">user123</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">用户名:</span>
+              <span class="detail-value" id="detail-username">张三</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">开始时间:</span>
+              <span class="detail-value" id="detail-start-time">2023-06-15 14:30:22</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">结束时间:</span>
+              <span class="detail-value" id="detail-end-time">2023-06-15 14:45:10</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">会话类型:</span>
+              <span class="detail-value" id="detail-type">文本对话</span>
+            </div>
+          </div>
+          
+          <div class="detail-section tabbed-section">
+            <h3>对话与服务记录</h3>
+            <div class="tab-header" role="tablist">
+              <button class="tab-btn active" data-tab-target="conversation-tab" type="button">对话内容</button>
+              <button class="tab-btn" data-tab-target="service-calls-tab" type="button">服务调用记录</button>
+            </div>
+            <div class="tab-panel active" id="conversation-tab" role="tabpanel">
+              <div class="conversation-container" id="conversation-content">
+                <!-- 对话内容将通过JavaScript动态生成 -->
+              </div>
+            </div>
+            <div class="tab-panel" id="service-calls-tab" role="tabpanel">
+              <div class="service-calls-container" id="service-calls-content">
+                <!-- 服务调用记录将通过JavaScript动态生成 -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn export-session-btn"><i class="bi bi-download"></i> 导出会话</button>
+          <button class="modal-btn close-modal-btn">关闭</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <script src="sessionHistory.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>

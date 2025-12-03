@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>流量统计 - AI智能体后台管理系统</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="trafficStatistics.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item"><a href="trafficStatistics.html" class="nav-link">流量统计</a></li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">工具管理</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <main class="traffic-container">
+    <div class="page-header">
+      <h1><i class="bi bi-speedometer2"></i> 流量统计</h1>
+      <div class="breadcrumb">
+        <span>首页</span>
+        <i class="bi bi-chevron-right"></i>
+        <span>流量统计</span>
+      </div>
+    </div>
+
+    <div class="usage-subnav" role="tablist">
+      <button class="subnav-btn active" data-target="overview-section">用量概况</button>
+      <button class="subnav-btn" data-target="usage-list-section">用量清单</button>
+    </div>
+
+    <section class="usage-section active" id="overview-section">
+      <div class="filter-section">
+        <div class="filter-group">
+          <label for="time-range"><i class="bi bi-calendar-range"></i> 时间范围</label>
+          <select id="time-range" class="filter-select">
+            <option value="today">今日</option>
+            <option value="week" selected>本周</option>
+            <option value="month">本月</option>
+            <option value="quarter">本季度</option>
+            <option value="year">本年</option>
+            <option value="custom">自定义</option>
+          </select>
+        </div>
+
+        <div class="filter-group custom-range" id="custom-range-group">
+          <label for="start-date"><i class="bi bi-calendar"></i> 开始日期</label>
+          <input type="date" id="start-date" class="filter-input">
+          <label for="end-date"><i class="bi bi-calendar"></i> 结束日期</label>
+          <input type="date" id="end-date" class="filter-input">
+        </div>
+
+        <div class="filter-group">
+          <label for="user-filter"><i class="bi bi-people"></i> 用户筛选</label>
+          <select id="user-filter" class="filter-select">
+            <option value="all" selected>全部用户</option>
+            <option value="vip">VIP用户</option>
+            <option value="normal">普通用户</option>
+            <option value="enterprise">企业用户</option>
+          </select>
+        </div>
+
+        <button class="filter-btn" id="apply-filter">
+          <i class="bi bi-funnel"></i> 应用筛选
+        </button>
+        <button class="filter-btn secondary" id="reset-filter">
+          <i class="bi bi-arrow-counterclockwise"></i> 重置
+        </button>
+      </div>
+
+      <div class="stats-overview">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-cloud-arrow-up"></i>
+          </div>
+          <div class="stat-content">
+            <h3>调用次数</h3>
+            <p class="stat-value">124,000 <span></span></p>
+            <p class="stat-change positive">
+              <i class="bi bi-arrow-up"></i> 12.5% 环比
+            </p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="bi bi-cloud-arrow-down"></i>
+          </div>
+          <div class="stat-content">
+            <h3>调用量</h3>
+            <p class="stat-value">3.56 <span>百万tokens</span></p>
+            <p class="stat-change positive">
+              <i class="bi bi-arrow-up"></i> 8.2% 环比
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <div class="chart-container">
+          <div class="chart-header">
+            <h2>调用次数趋势</h2>
+            <div class="chart-actions">
+              <button class="chart-action-btn" id="download-chart">
+                <i class="bi bi-download"></i> 下载图表
+              </button>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <img loading="lazy" src="https://placeholder.pics/svg/800x400/DEDEDE/555555/调用次数折线图" alt="流量趋势图表" class="chart-image">
+          </div>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-header">
+            <h2>调用量趋势</h2>
+            <div class="chart-actions">
+              <button class="chart-action-btn" id="download-pie-chart">
+                <i class="bi bi-download"></i> 下载图表
+              </button>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <img loading="lazy" src="https://placeholder.pics/svg/800x400/DEDEDE/555555/调用量折线图" alt="用户流量分布折线图" class="chart-image">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="usage-section" id="usage-list-section">
+      <div class="query-panel">
+        <div class="panel-header">
+          <div>
+            <p class="panel-subtitle">支持按用户、类型及时间维度精准过滤</p>
+            <h2>用量清单查询</h2>
+          </div>
+          <div class="panel-actions">
+            <button class="filter-btn" id="usage-export">
+              <i class="bi bi-file-earmark-arrow-down"></i> 导出清单
+            </button>
+          </div>
+        </div>
+
+        <form id="usage-list-form" class="query-form">
+          <div class="form-field wide">
+            <label for="keyword"><i class="bi bi-search"></i> 搜索用户 / 账号</label>
+            <input type="text" id="keyword" placeholder="输入用户姓名、邮箱或手机号">
+          </div>
+
+          <div class="form-field">
+            <label for="user-type-filter-list"><i class="bi bi-person-badge"></i> 级别</label>
+            <select id="user-type-filter-list">
+              <option value="all">全部级别</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="account-type-filter"><i class="bi bi-diagram-3"></i> 账户类型</label>
+            <select id="account-type-filter">
+              <option value="all">所有账户</option>
+              <option value="enterprise">VIP</option>
+              <option value="personal">普通</option>
+              <option value="trialAccount">试用</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="transaction-filter"><i class="bi bi-shuffle"></i> 交易类型</label>
+            <select id="transaction-filter">
+              <option value="all">全部交易</option>
+              <option value="consume">消费</option>
+              <option value="recharge">充入</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="list-start-date"><i class="bi bi-calendar2-week"></i> 开始时间</label>
+            <input type="date" id="list-start-date">
+          </div>
+
+          <div class="form-field">
+            <label for="list-end-date"><i class="bi bi-calendar2-week"></i> 结束时间</label>
+            <input type="date" id="list-end-date">
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="filter-btn">
+              <i class="bi bi-search"></i> 查询
+            </button>
+            <button type="button" class="filter-btn secondary" id="list-reset">
+              <i class="bi bi-arrow-counterclockwise"></i> 重置
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="usage-table-wrapper">
+        <div class="table-header">
+          <h2>用量清单</h2>
+          <div class="table-actions">
+            <button class="table-action-btn" id="usage-download">
+              <i class="bi bi-download"></i> 下载报表
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="usage-table">
+            <thead>
+              <tr>
+                <th>编号</th>
+                <th>时间</th>
+                <th>用户名</th>
+                <th>账号</th>
+                <th>级别</th>
+                <th>账户类型</th>
+                <th>交易类型</th>
+                <th>tokens(万)</th>
+                <th>余额(万tokens)</th>
+              </tr>
+            </thead>
+            <tbody id="usage-table-body"></tbody>
+          </table>
+        </div>
+
+        <div class="empty-state" id="usage-empty-state">
+          <i class="bi bi-inbox"></i>
+          <p>当前筛选条件下暂无用量记录</p>
+        </div>
+
+        <div class="pagination" id="usage-pagination">
+          <button class="pagination-btn" data-direction="prev">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <div class="pagination-info">
+            <span id="usage-page-indicator">第 1 页</span>
+            <span id="usage-total-indicator">共 0 条记录</span>
+          </div>
+          <button class="pagination-btn" data-direction="next">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+  <script src="trafficStatistics.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>

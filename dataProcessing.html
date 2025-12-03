@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据处理 - AI智能体后台管理系统</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="dataProcessing.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item"><a href="trafficStatistics.html" class="nav-link">流量统计</a></li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">工具管理</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <main class="data-processing-container">
+    <div class="page-header">
+      <h1><i class="bi bi-database"></i> 数据处理</h1>
+      <div class="breadcrumb">
+        <span>首页</span> / <span>数据处理</span>
+      </div>
+    </div>
+
+    <div class="data-controls">
+      <div class="filter-section">
+        <div class="filter-group">
+          <label for="data-type"><i class="bi bi-filter"></i> 数据类型</label>
+          <select id="data-type" class="form-select">
+            <option value="all">全部</option>
+            <option value="text">文本</option>
+            <option value="file">文件</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="date-range"><i class="bi bi-calendar"></i> 时间范围</label>
+          <select id="date-range" class="form-select">
+            <option value="today">今天</option>
+            <option value="week">本周</option>
+            <option value="month">本月</option>
+            <option value="custom">自定义</option>
+          </select>
+        </div>
+        
+        <div class="filter-group custom-date" style="display: none;">
+          <label for="start-date">开始日期</label>
+          <input type="date" id="start-date" class="form-input">
+          
+          <label for="end-date">结束日期</label>
+          <input type="date" id="end-date" class="form-input">
+        </div>
+        
+        <button class="btn btn-primary" id="apply-filters">
+          <i class="bi bi-search"></i> 筛选
+        </button>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="btn btn-secondary" id="export-selected">
+          <i class="bi bi-download"></i> 导出选中
+        </button>
+        <button class="btn btn-danger" id="delete-selected">
+          <i class="bi bi-trash"></i> 删除选中
+        </button>
+      </div>
+    </div>
+    
+    <div class="data-table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="select-all"></th>
+            <th>ID</th>
+            <th>数据类型</th>
+            <th>用户</th>
+            <th>时间</th>
+            <th>内容摘要</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox" class="data-checkbox"></td>
+            <td>DP001</td>
+            <td><span class="badge badge-text">文本</span></td>
+            <td>user1@example.com</td>
+            <td>2023-07-15 14:30</td>
+            <td>关于产品功能的咨询...</td>
+            <td>
+              <button class="btn btn-sm btn-view"><i class="bi bi-eye"></i> 查看</button>
+            </td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="data-checkbox"></td>
+            <td>DP002</td>
+            <td><span class="badge badge-file">文件</span></td>
+            <td>user2@example.com</td>
+            <td>2023-07-15 15:45</td>
+            <td>document.pdf</td>
+            <td>
+              <button class="btn btn-sm btn-view"><i class="bi bi-eye"></i> 查看</button>
+            </td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="data-checkbox"></td>
+            <td>DP003</td>
+            <td><span class="badge badge-text">文本</span></td>
+            <td>user3@example.com</td>
+            <td>2023-07-16 09:12</td>
+            <td>技术支持请求...</td>
+            <td>
+              <button class="btn btn-sm btn-view"><i class="bi bi-eye"></i> 查看</button>
+            </td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="data-checkbox"></td>
+            <td>DP004</td>
+            <td><span class="badge badge-file">文件</span></td>
+            <td>user4@example.com</td>
+            <td>2023-07-16 11:30</td>
+            <td>image.png</td>
+            <td>
+              <button class="btn btn-sm btn-view"><i class="bi bi-eye"></i> 查看</button>
+            </td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="data-checkbox"></td>
+            <td>DP005</td>
+            <td><span class="badge badge-text">文本</span></td>
+            <td>user5@example.com</td>
+            <td>2023-07-17 16:20</td>
+            <td>账户问题咨询...</td>
+            <td>
+              <button class="btn btn-sm btn-view"><i class="bi bi-eye"></i> 查看</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="pagination">
+        <button class="btn btn-pagination" disabled><i class="bi bi-chevron-left"></i></button>
+        <button class="btn btn-pagination active">1</button>
+        <button class="btn btn-pagination">2</button>
+        <button class="btn btn-pagination">3</button>
+        <button class="btn btn-pagination"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </div>
+    
+    <div class="data-preview-modal" id="preview-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>数据预览</h3>
+          <button class="btn btn-close" id="close-preview">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="preview-info">
+            <p><strong>ID:</strong> <span id="preview-id">DP001</span></p>
+            <p><strong>用户:</strong> <span id="preview-user">user1@example.com</span></p>
+            <p><strong>时间:</strong> <span id="preview-time">2023-07-15 14:30</span></p>
+            <p><strong>类型:</strong> <span id="preview-type">文本</span></p>
+          </div>
+          <div class="preview-content" id="preview-content">
+            <p>这里是数据内容的详细预览...</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="download-preview">
+            <i class="bi bi-download"></i> 下载
+          </button>
+          <button class="btn btn-danger" id="delete-preview">
+            <i class="bi bi-trash"></i> 删除
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <script src="dataProcessing.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>

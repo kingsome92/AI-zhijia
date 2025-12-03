@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>工具管理</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="mcpService.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li>
+        <li class="nav-item"><a href="trafficStatistics.html" class="nav-link">流量统计</a></li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="mcpService.html" class="dropdown-item">工具管理</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li>
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+  
+  <main class="container">
+    <div class="page-header">
+      <h1><i class="bi bi-robot"></i> 工具管理</h1>
+      <p class="subtitle">创建、编辑和管理AI工具配置,支持JSON服务配置</p>
+    </div>
+
+    <div class="agent-management-layout">
+      <!-- 左侧：工具列表 -->
+      <div class="agent-list-panel">
+        <div class="panel-header">
+          <h2><i class="bi bi-list-ul"></i> 工具列表</h2>
+          <button id="create-agent-btn" class="btn primary btn-sm">
+            <i class="bi bi-plus-circle"></i> 创建工具
+          </button>
+        </div>
+        <div class="agent-list-search">
+          <input type="text" id="agent-search" placeholder="搜索工具..." class="search-input">
+          <i class="bi bi-search search-icon"></i>
+        </div>
+        <div class="agent-list-container" id="agent-list">
+          <!-- 工具列表项将通过JS动态生成 -->
+        </div>
+      </div>
+
+      <!-- 右侧：工具详情和配置 -->
+      <div class="agent-detail-panel" id="agent-detail-panel">
+        <div class="empty-state" id="empty-state">
+          <i class="bi bi-robot"></i>
+          <h3>选择一个工具</h3>
+          <p>从左侧列表中选择一个工具进行编辑，或创建新的工具</p>
+        </div>
+
+        <!-- 工具基本信息表单 -->
+        <div class="agent-form-container" id="agent-form-container" style="display: none;">
+          <div class="form-header">
+            <h2 id="form-title">创建工具</h2>
+            <div class="form-actions">
+              <button id="cancel-edit-btn" class="btn">取消</button>
+              <button id="save-agent-btn" class="btn primary">
+                <i class="bi bi-save"></i> 保存工具
+              </button>
+            </div>
+          </div>
+
+          <div class="agent-form">
+            <div class="form-group">
+              <label for="agent-name">工具名称 <span class="required">*</span></label>
+              <input type="text" id="agent-name" class="form-control" placeholder="请输入工具名称" required>
+            </div>
+
+            <div class="form-group">
+              <label for="agent-description">描述</label>
+              <textarea id="agent-description" class="form-control" rows="3" placeholder="请输入工具描述"></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="agent-version">版本</label>
+                <input type="text" id="agent-version" class="form-control" placeholder="1.0.0" value="1.0.0">
+              </div>
+              <div class="form-group">
+                <label for="agent-status">状态</label>
+                <select id="agent-status" class="form-control">
+                  <option value="active">启用</option>
+                  <option value="inactive">禁用</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="agent-call-type">调用方式 <span class="required">*</span></label>
+              <div class="radio-group">
+                <label class="radio-label">
+                  <input type="radio" name="call-type" id="call-type-api" value="api" checked>
+                  <span>API调用</span>
+                </label>
+                <label class="radio-label">
+                  <input type="radio" name="call-type" id="call-type-mcp" value="mcp">
+                  <span>MCP调用</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="agent-tags">标签</label>
+              <input type="text" id="agent-tags" class="form-control" placeholder="用逗号分隔多个标签">
+              <small class="form-text">例如：AI, 对话, 客服</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- JSON配置编辑器 -->
+        <div class="config-container" id="config-container" style="display: none;">
+          <div class="config-header">
+            <h3><i class="bi bi-code-slash"></i> JSON服务配置</h3>
+            <div class="config-toolbar">
+              <button id="format-btn" class="btn-icon" title="格式化"><i class="bi bi-code-square"></i></button>
+              <button id="minify-btn" class="btn-icon" title="压缩"><i class="bi bi-file-minus"></i></button>
+              <button id="validate-btn" class="btn-icon" title="验证"><i class="bi bi-check-circle"></i></button>
+              <div class="dropdown">
+                <button class="btn-icon dropdown-toggle" id="templateDropdown" title="配置模板">
+                  <i class="bi bi-file-earmark-code"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="templateDropdown">
+                  <li><a class="dropdown-item" href="#" data-template="default">默认模板</a></li>
+                  <li><a class="dropdown-item" href="#" data-template="minimal">最小化模板</a></li>
+                  <li><a class="dropdown-item" href="#" data-template="advanced">高级模板</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#" id="import-template"><i class="bi bi-upload"></i> 导入模板</a></li>
+                  <li><a class="dropdown-item" href="#" id="export-template"><i class="bi bi-download"></i> 导出模板</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="config-editor">
+            <textarea id="json-editor" class="json-editor" spellcheck="false" placeholder="请输入JSON配置..."></textarea>
+          </div>
+
+          <div class="config-actions">
+            <button id="save-config-btn" class="btn primary">
+              <i class="bi bi-save"></i> 保存配置
+            </button>
+            <button id="test-config-btn" class="btn">
+              <i class="bi bi-play-circle"></i> 测试配置
+            </button>
+          </div>
+
+          <div class="config-status">
+            <div id="status-message" class="status-message">
+              <i class="bi bi-info-circle"></i> 准备好编辑配置
+            </div>
+          </div>
+        </div>
+
+        <!-- 集成信息：根据调用方式显示 -->
+        <!-- 暂时注释掉，二次编辑工具时不需要暴露API和MCP调用的说明信息 -->
+        <!--
+        <div class="integration-section" id="integration-section" style="display: none;">
+          <div class="integration-card" id="mcp-integration-card" style="display: none;">
+            <div class="integration-card-header">
+              <div>
+                <h3><i class="bi bi-diagram-3"></i> MCP调用</h3>
+                <p>通过MCP协议拉起工具，支持流式调用与鉴权配置</p>
+              </div>
+              <span class="badge badge-mcp">MCP</span>
+            </div>
+            <div class="integration-card-body">
+              <div class="integration-field">
+                <div class="field-label">调用地址</div>
+                <div class="field-value copyable">
+                  <code id="mcp-url"></code>
+                  <button class="btn-icon copy-btn" data-target="mcp-url" title="复制地址">
+                    <i class="bi bi-clipboard"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="integration-field">
+                <div class="field-label">连接类型</div>
+                <div class="field-value" id="mcp-type"></div>
+              </div>
+              <div class="integration-field">
+                <div class="field-label">鉴权头</div>
+                <ul class="header-list" id="mcp-headers"></ul>
+              </div>
+              <div class="integration-field">
+                <div class="field-label">配置片段</div>
+                <pre class="snippet" id="mcp-snippet"></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="integration-card" id="api-integration-card" style="display: none;">
+            <div class="integration-card-header">
+              <div>
+                <h3><i class="bi bi-plug"></i> API调用</h3>
+                <p>直接通过HTTP接口调用工具，支持入参与出参校验</p>
+              </div>
+              <span class="badge badge-api">API</span>
+            </div>
+            <div class="integration-card-body">
+              <div class="integration-field">
+                <div class="field-label">认证方式</div>
+                <div class="field-value copyable">
+                  <code id="api-auth"></code>
+                  <button class="btn-icon copy-btn" data-target="api-auth" title="复制认证信息">
+                    <i class="bi bi-clipboard"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="param-block">
+                <div class="param-block-header">
+                  <h4>入参字段</h4>
+                  <span class="tip">根据场景传入变量</span>
+                </div>
+                <div class="table-wrapper">
+                  <table class="param-table" id="api-input-table">
+                    <thead>
+                      <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>必填</th>
+                        <th>描述</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="param-block">
+                <div class="param-block-header">
+                  <h4>出参字段</h4>
+                  <span class="tip">用于展示或二次处理</span>
+                </div>
+                <div class="table-wrapper">
+                  <table class="param-table" id="api-output-table">
+                    <thead>
+                      <tr>
+                        <th>参数名</th>
+                        <th>类型</th>
+                        <th>描述</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        -->
+      </div>
+    </div>
+  </main>
+
+  <!-- 删除确认模态框 -->
+  <div class="modal-overlay" id="delete-modal" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>确认删除</h3>
+        <button class="modal-close" id="close-delete-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>确定要删除工具 "<span id="delete-agent-name"></span>" 吗？此操作无法撤销。</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="cancel-delete-btn">取消</button>
+        <button class="btn primary" id="confirm-delete-btn">确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+  <script src="mcpService.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>
