@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>应用编辑</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="appEdit.css">
+  <link rel="stylesheet" href="header.css">
+  <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+  <div id="header-container"><div class="header-component">
+  <div class="header-container">
+    <div class="logo-container">
+      <img 
+        loading="lazy" 
+        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
+        alt="AI智能体管理后台" 
+        class="logo"
+      >
+    </div>
+    
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="dashboard.html" class="nav-link">仪表盘</a></li>
+        <li class="nav-item"><a href="userManagement.html" class="nav-link">用户管理</a></li>
+        <!-- <li class="nav-item"><a href="dataProcessing.html" class="nav-link">数据处理</a></li> -->
+        <li class="nav-item dropdown">
+          <a href="trafficStatistics.html" class="nav-link">流量统计 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="trafficStatistics.html#overview-section" class="dropdown-item">用量概况</a></li>
+            <li><a href="trafficStatistics.html#usage-list-section" class="dropdown-item">用量清单</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="accountManagement.html" class="nav-link">账号管理</a></li>
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link">系统配置 <span class="dropdown-icon">▼</span></a>
+          <ul class="dropdown-menu">
+            <li><a href="appManagement.html" class="dropdown-item">应用管理</a></li>
+            <li><a href="mcpService.html" class="dropdown-item">工具管理</a></li>
+            <li><a href="sessionTheme.html" class="dropdown-item">会话管理</a></li>
+            <li><a href="taskList.html" class="dropdown-item">任务列表</a></li>
+            <li><a href="systemSettings.html" class="dropdown-item">系统设置</a></li>
+            <li><a href="modelConfiguration.html" class="dropdown-item">大模型配置</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"><a href="sessionHistory.html" class="nav-link">会话记录</a></li>
+        <!-- <li class="nav-item"><a href="resourceManagement.html" class="nav-link">资源管理</a></li> -->
+        <li class="nav-item"><a href="systemLogs.html" class="nav-link">系统日志</a></li>
+      </ul>
+    </nav>
+    
+    <div class="header-actions">
+      <div class="search-container">
+        <input type="text" placeholder="搜索功能或用户..." class="search-input">
+        <button class="search-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar">
+          <img 
+            loading="lazy" 
+            src="https://placeholder.pics/svg/40x40/4A5568/FFFFFF/管理员" 
+            alt="管理员头像"
+          >
+        </div>
+        <div class="user-menu">
+          <span class="username">管理员</span>
+          <button class="logout-button">退出</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+  <main class="container">
+    <div class="page-header">
+      <div class="breadcrumb">
+        <a href="appManagement.html">应用管理</a>
+        <span class="sep">/</span>
+        <span id="breadcrumbName">应用编辑</span>
+      </div>
+      <div class="header-row">
+        <h1><i class="bi bi-grid-1x2"></i> <span id="pageTitle">应用编辑</span></h1>
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="backBtn"><i class="bi bi-arrow-left"></i> 返回列表</button>
+          <button class="btn btn-secondary" id="generateKeyBtn"><i class="bi bi-key"></i> 生成/重置密钥</button>
+          <button class="btn btn-primary" id="saveBtn"><i class="bi bi-save"></i> 保存</button>
+          <button class="btn btn-primary" id="publishBtn"><i class="bi bi-upload"></i> 发布/更新</button>
+        </div>
+      </div>
+      <p class="subtitle">围绕核心能力：会话模板 + 大模型 + Prompt + 工具 + 数据库配置</p>
+    </div>
+
+    <!-- 横向布局：左右分栏 -->
+    <div class="horizontal-layout">
+      <!-- 左侧：主要配置内容 -->
+      <div class="main-content">
+        <section class="card">
+          <div class="card-header">
+            <h2><i class="bi bi-info-circle"></i> 基本信息</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="appName">应用名称 <span class="required">*</span></label>
+                <input type="text" id="appName" placeholder="例如：带图形的题目生成" maxlength="50">
+              </div>
+              <div class="form-group span-2">
+                <label for="appDesc">描述</label>
+                <textarea id="appDesc" rows="3" placeholder="描述该应用提供的能力与目标用户场景"></textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h2><i class="bi bi-sliders"></i> 核心配置</h2>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="templateSelect">会话模板</label>
+                <select id="templateSelect"></select>
+                <div class="help">来源：`sessionTheme.html` 中维护的模板（localStorage: <code>sessionTemplates</code>）</div>
+              </div>
+              <div class="form-group">
+                <label for="modelSelect">大模型</label>
+                <select id="modelSelect"></select>
+                <div class="help">来源：`modelConfiguration.html` 中添加的模型（localStorage: <code>models</code>）</div>
+              </div>
+              <div class="form-group span-2">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                  <label for="promptText" style="margin: 0;">Prompt 配置</label>
+                  <div style="display: flex; gap: 0.5rem;">
+                    <button type="button" class="btn btn-secondary btn-sm" id="manageVariablesBtn">
+                      <i class="bi bi-tag"></i> 变量管理
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="useTemplateBtn">
+                      <i class="bi bi-file-earmark-text"></i> 使用模板
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="insertVariableBtn">
+                      <i class="bi bi-plus-circle"></i> 插入变量
+                    </button>
+                  </div>
+                </div>
+                <textarea id="promptText" rows="8" placeholder="对当前应用的能力、风格、安全边界、工具调用策略、输出格式等给出指令。提示：输入 {{ 可自动提示变量"></textarea>
+                <div class="help">建议包含：角色定位、任务目标、约束、输出格式、工具使用规范、数据查询口径等。可使用 {{变量名}} 引用变量</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h2><i class="bi bi-tools"></i> 工具组件</h2>
+            <div class="card-header-actions">
+              <button class="btn btn-secondary btn-sm" id="refreshToolsBtn"><i class="bi bi-arrow-repeat"></i> 刷新</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="tools-hint">来源：`mcpService.html` 中维护的工具（localStorage: <code>mcpTools</code>）</div>
+            <div class="tools-grid" id="toolsGrid"></div>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <h2><i class="bi bi-database"></i> 数据库配置</h2>
+            <div class="card-header-actions">
+              <label class="switch">
+                <input type="checkbox" id="dbEnabled">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="dbType">数据库类型</label>
+                <select id="dbType">
+                  <option value="mysql">MySQL</option>
+                  <option value="postgres">PostgreSQL</option>
+                  <option value="mssql">SQL Server</option>
+                  <option value="oracle">Oracle</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="dbHost">Host</label>
+                <input type="text" id="dbHost" placeholder="例如：127.0.0.1">
+              </div>
+              <div class="form-group">
+                <label for="dbPort">Port</label>
+                <input type="number" id="dbPort" placeholder="例如：3306">
+              </div>
+              <div class="form-group">
+                <label for="dbName">Database</label>
+                <input type="text" id="dbName" placeholder="例如：analytics">
+              </div>
+              <div class="form-group">
+                <label for="dbUser">Username</label>
+                <input type="text" id="dbUser" placeholder="例如：readonly_user">
+              </div>
+              <div class="form-group">
+                <label for="dbPass">Password</label>
+                <input type="password" id="dbPass" placeholder="请输入密码（本地演示用明文存储）">
+              </div>
+              <div class="form-group span-2">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                  <label for="dbSchemaHint" style="margin: 0;">字段/口径说明（可选）</label>
+                  <div style="display: flex; gap: 0.5rem;">
+                    <button type="button" class="btn btn-primary btn-sm" id="testDbConnectionBtn" style="display: none;">
+                      <i class="bi bi-plug"></i> 测试连接
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm" id="selectFieldsBtn" style="display: none;">
+                      <i class="bi bi-table"></i> 选择表字段
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" id="manageFieldDictBtn" style="display: none;">
+                      <i class="bi bi-list-ul"></i> 字段字典
+                    </button>
+                  </div>
+                </div>
+                <textarea id="dbSchemaHint" rows="5" placeholder="例如：表/字段含义、主键、时间字段、常用指标口径、禁止查询的敏感字段等"></textarea>
+                <div class="help">提示：可直接点击"选择表字段"使用模拟数据演示，或先填写数据库信息后点击"测试连接"</div>
+              </div>
+            </div>
+            <div class="help warn">说明：当前为静态原型实现，数据库连接测试和字段获取为模拟功能。</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- 右侧：发布信息（固定侧边栏） -->
+      <div class="sidebar-content">
+        <section class="card sidebar-card">
+          <div class="card-header">
+            <h2><i class="bi bi-shield-lock"></i> 发布信息</h2>
+          </div>
+          <div class="card-body">
+            <div class="meta-list">
+              <div class="meta-item">
+                <div class="meta-label">状态</div>
+                <div class="meta-value" id="statusText">-</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">应用密钥</div>
+                <div class="meta-value mono" id="appKeyText">-</div>
+                <button class="btn btn-secondary btn-sm" id="copyKeyBtn" style="margin-top: 0.5rem; width: 100%;">
+                  <i class="bi bi-clipboard"></i> 复制
+                </button>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">最近更新</div>
+                <div class="meta-value" id="updatedAtText">-</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">最近发布</div>
+                <div class="meta-value" id="publishedAtText">-</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-container"><div class="footer-component">
+  <div class="footer-container">
+    <div class="footer-links">
+      <div class="footer-section">
+        <h3 class="footer-title">快速链接</h3>
+        <ul class="footer-list">
+          <li><a href="/dashboard.html" class="footer-link">控制台</a></li>
+          <li><a href="/documentation" class="footer-link">文档中心</a></li>
+          <li><a href="/help" class="footer-link">帮助中心</a></li>
+          <li><a href="/api" class="footer-link">API参考</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">产品</h3>
+        <ul class="footer-list">
+          <li><a href="/features" class="footer-link">功能特性</a></li>
+          <li><a href="/pricing" class="footer-link">定价方案</a></li>
+          <li><a href="/updates" class="footer-link">更新日志</a></li>
+          <li><a href="/roadmap" class="footer-link">产品路线图</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">支持</h3>
+        <ul class="footer-list">
+          <li><a href="mailto:support@aiplatform.com" class="footer-link">support@aiplatform.com</a></li>
+          <li><a href="tel:+8610123456789" class="footer-link">+86 10 1234 5678</a></li>
+          <li><a href="/feedback" class="footer-link">意见反馈</a></li>
+          <li><a href="/status" class="footer-link">系统状态</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3 class="footer-title">关注我们</h3>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="微信">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微信" alt="微信">
+          </a>
+          <a href="#" class="social-icon" aria-label="微博">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/微博" alt="微博">
+          </a>
+          <a href="#" class="social-icon" aria-label="知乎">
+            <img loading="lazy" src="https://placeholder.pics/svg/40x40/3A506B/FFFFFF/知乎" alt="知乎">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="copyright">
+        &copy; 2023 AI智能体管理平台. 保留所有权利.
+      </div>
+      <div class="legal-links">
+        <a href="/privacy" class="footer-link">隐私政策</a>
+        <span class="divider">|</span>
+        <a href="/terms" class="footer-link">服务条款</a>
+        <span class="divider">|</span>
+        <a href="/cookies" class="footer-link">Cookie政策</a>
+      </div>
+      <div class="icp">
+        <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" class="footer-link">
+          京ICP备12345678号-1
+        </a>
+      </div>
+    </div>
+  </div>
+</div></div>
+
+  <div class="toast" id="toast" style="display:none;"></div>
+
+  <!-- 变量管理模态框 -->
+  <div class="modal" id="variableModal" aria-hidden="true">
+    <div class="modal-content modal-medium">
+      <div class="modal-header">
+        <h3><i class="bi bi-tag"></i> 变量管理</h3>
+        <button class="modal-close" data-close="variableModal" aria-label="关闭">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 1rem;">
+          <button type="button" class="btn btn-primary btn-sm" id="addVariableBtn">
+            <i class="bi bi-plus-circle"></i> 添加变量
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="importVariablesBtn" style="margin-left: 0.5rem;">
+            <i class="bi bi-upload"></i> 导入
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="exportVariablesBtn" style="margin-left: 0.5rem;">
+            <i class="bi bi-download"></i> 导出
+          </button>
+        </div>
+        <div class="variables-list" id="variablesList">
+          <!-- 变量列表将动态生成 -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="variableModal">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加/编辑变量模态框 -->
+  <div class="modal" id="variableEditModal" aria-hidden="true">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h3 id="variableEditTitle"><i class="bi bi-plus-circle"></i> 添加变量</h3>
+        <button class="modal-close" data-close="variableEditModal" aria-label="关闭">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="varName">变量名 <span class="required">*</span></label>
+          <input type="text" id="varName" placeholder="例如：studentName" pattern="[a-zA-Z_][a-zA-Z0-9_]*">
+          <div class="help">只能包含字母、数字和下划线，不能以数字开头</div>
+        </div>
+        <div class="form-group">
+          <label for="varLabel">显示名称</label>
+          <input type="text" id="varLabel" placeholder="例如：学生姓名">
+        </div>
+        <div class="form-group">
+          <label for="varType">变量类型</label>
+          <select id="varType">
+            <option value="text">文本</option>
+            <option value="number">数字</option>
+            <option value="date">日期</option>
+            <option value="select">选项</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="varDefault">默认值</label>
+          <input type="text" id="varDefault" placeholder="例如：张三 或 {{today}}（自动填充）">
+        </div>
+        <div class="form-group">
+          <label for="varDescription">描述</label>
+          <textarea id="varDescription" rows="2" placeholder="变量的用途说明"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="variableEditModal">取消</button>
+        <button class="btn btn-primary" id="saveVariableBtn">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prompt 模板选择模态框 -->
+  <div class="modal" id="promptTemplateModal" aria-hidden="true">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3><i class="bi bi-file-earmark-text"></i> Prompt 模板库</h3>
+        <button class="modal-close" data-close="promptTemplateModal" aria-label="关闭">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="template-grid" id="templateGrid">
+          <!-- 模板卡片将动态生成 -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="promptTemplateModal">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 选择表字段模态框（可视化选择） -->
+  <div class="modal" id="selectFieldsModal" aria-hidden="true">
+    <div class="modal-content modal-extra-large">
+      <div class="modal-header">
+        <h3><i class="bi bi-table"></i> 选择表字段</h3>
+        <button class="modal-close" data-close="selectFieldsModal" aria-label="关闭">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+          <div style="flex: 1; position: relative;">
+            <i class="bi bi-search" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--gray-600);"></i>
+            <input type="text" id="fieldSearchInput" placeholder="请输入关键词搜索表或字段..." 
+                   style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.5rem; border: 1px solid var(--gray-200); border-radius: 0.5rem;">
+          </div>
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <input type="checkbox" id="showSqlCheckbox">
+            <span>SQL语句</span>
+          </label>
+        </div>
+        <div class="table-field-selector">
+          <div class="table-list-panel">
+            <div class="panel-header">
+              <h4><i class="bi bi-stack"></i> 数据表</h4>
+            </div>
+            <div class="table-list-container" id="tableListContainer">
+              <!-- 表列表将动态生成 -->
+            </div>
+          </div>
+          <div class="field-list-panel">
+            <div class="panel-header">
+              <h4><i class="bi bi-list-check"></i> 已选表及字段</h4>
+            </div>
+            <div class="field-list-container" id="fieldListContainer">
+              <!-- 字段列表将动态生成 -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div style="flex: 1; text-align: left;">
+          <span id="selectedFieldsCount" style="color: var(--gray-600); font-size: 0.9rem;">已选择 0 个字段</span>
+        </div>
+        <button class="btn btn-secondary" data-close="selectFieldsModal">取消</button>
+        <button class="btn btn-primary" id="saveSelectedFieldsBtn">
+          <i class="bi bi-check-circle"></i> 保存选中字段
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 字段字典管理模态框 -->
+  <div class="modal" id="fieldDictModal" aria-hidden="true">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h3><i class="bi bi-list-ul"></i> 字段字典管理</h3>
+        <button class="modal-close" data-close="fieldDictModal" aria-label="关闭">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 1rem;">
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label for="fieldTableName">表名</label>
+            <input type="text" id="fieldTableName" placeholder="例如：students">
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" id="addFieldBtn">
+            <i class="bi bi-plus-circle"></i> 添加字段
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="importFieldsBtn" style="margin-left: 0.5rem;">
+            <i class="bi bi-upload"></i> 批量导入
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="exportFieldsBtn" style="margin-left: 0.5rem;">
+            <i class="bi bi-download"></i> 导出字典
+          </button>
+        </div>
+        <div class="fields-table-container">
+          <table class="fields-table">
+            <thead>
+              <tr>
+                <th>表名</th>
+                <th>字段名</th>
+                <th>别名</th>
+                <th>类型</th>
+                <th>描述</th>
+                <th>可查询</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="fieldsTableBody">
+              <!-- 字段列表将动态生成 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="fieldDictModal">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加/编辑字段模态框 -->
+  <div class="modal" id="fieldEditModal" aria-hidden="true">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h3 id="fieldEditTitle"><i class="bi bi-plus-circle"></i> 添加字段</h3>
+        <button class="modal-close" data-close="fieldEditModal" aria-label="关闭">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="fieldTable">表名 <span class="required">*</span></label>
+          <input type="text" id="fieldTable" placeholder="例如：students">
+        </div>
+        <div class="form-group">
+          <label for="fieldName">字段名 <span class="required">*</span></label>
+          <input type="text" id="fieldName" placeholder="例如：student_id">
+        </div>
+        <div class="form-group">
+          <label for="fieldAlias">别名</label>
+          <input type="text" id="fieldAlias" placeholder="例如：学生ID">
+        </div>
+        <div class="form-group">
+          <label for="fieldType">字段类型</label>
+          <select id="fieldType">
+            <option value="text">文本</option>
+            <option value="number">数字</option>
+            <option value="date">日期</option>
+            <option value="datetime">日期时间</option>
+            <option value="boolean">布尔值</option>
+            <option value="other">其他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="fieldDesc">描述</label>
+          <textarea id="fieldDesc" rows="2" placeholder="字段的用途、含义、约束等说明"></textarea>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="fieldQueryable" checked>
+            <span>允许查询</span>
+          </label>
+          <div class="help">取消勾选表示该字段为敏感字段，禁止在查询中使用</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="fieldEditModal">取消</button>
+        <button class="btn btn-primary" id="saveFieldBtn">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="appEdit.js"></script>
+  <script src="header.js"></script>
+  <script src="footer.js"></script>
+</body>
+</html>
+

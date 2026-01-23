@@ -587,7 +587,9 @@ body {
   border-left: 0.3em solid transparent;
 }
 
-.dropdown-menu {
+/* 注意：header 中的下拉菜单使用 header.css 的样式，这里只针对页面内的下拉菜单 */
+.config-container .dropdown-menu,
+.agent-form-container .dropdown-menu {
   position: absolute;
   z-index: 1000;
   display: none;
@@ -606,7 +608,8 @@ body {
   right: 0;
 }
 
-.dropdown-menu.show {
+.config-container .dropdown-menu.show,
+.agent-form-container .dropdown-menu.show {
   display: block;
 }
 

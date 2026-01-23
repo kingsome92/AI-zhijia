@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-  loadSharedComponents();
+  // 注意：header 和 footer 已经直接嵌入在 mcpService.html 中，不需要动态加载
+  // loadSharedComponents(); // 已注释，避免替换已嵌入的 header，导致 header.js 事件绑定失效
 
   const agentListEl = document.getElementById('agent-list');
   const agentSearchInput = document.getElementById('agent-search');
@@ -130,8 +131,32 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'content', type: 'String', description: '返回的文本内容，可直接展示' }
   ];
 
-  // 示例智能体数据
-  let agents = [
+  // ========== 工具数据（localStorage持久化，供“应用管理”模块复用） ==========
+  const TOOL_STORAGE_KEY = 'mcpTools';
+
+  function loadToolsFromStorage() {
+    try {
+      const raw = localStorage.getItem(TOOL_STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return null;
+      return parsed;
+    } catch (e) {
+      console.warn('读取工具缓存失败，使用示例数据:', e);
+      return null;
+    }
+  }
+
+  function persistTools() {
+    try {
+      localStorage.setItem(TOOL_STORAGE_KEY, JSON.stringify(agents));
+    } catch (e) {
+      console.warn('保存工具缓存失败:', e);
+    }
+  }
+
+  // 示例工具数据（首次进入会写入localStorage）
+  const defaultAgents = [
     {
       id: 'agt-001',
       name: '客服助理',
@@ -169,6 +194,9 @@ document.addEventListener('DOMContentLoaded', () => {
       integration: buildIntegrationProfile('知识库检索机器人')
     }
   ];
+
+  let agents = loadToolsFromStorage() || defaultAgents;
+  persistTools();
 
   let selectedAgentId = null;
   let currentEditingId = null;
@@ -469,6 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
       agents = agents.map((agent) =>
         agent.id === currentEditingId ? { ...agent, ...payload } : agent
       );
+      persistTools();
       updateStatus('工具信息已更新', 'success');
       selectAgent(currentEditingId);
     } else {
@@ -478,6 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
         integration: buildIntegrationProfile(name)
       };
       agents.unshift(newAgent);
+      persistTools();
       updateStatus('工具创建成功', 'success');
       renderAgentList(agentSearchInput.value);
       selectAgent(newAgent.id);
@@ -497,6 +527,7 @@ document.addEventListener('DOMContentLoaded', () => {
       agents = agents.map((agent) =>
         agent.id === currentEditingId ? { ...agent, config: agentDraftConfig } : agent
       );
+      persistTools();
       updateStatus('配置已保存', 'success');
     } else {
       updateStatus('配置草稿已保存，创建完成后将自动绑定', 'info');
@@ -682,6 +713,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function confirmDelete() {
     if (!agentToDeleteId) return;
     agents = agents.filter((agent) => agent.id !== agentToDeleteId);
+    persistTools();
 
     if (selectedAgentId === agentToDeleteId) {
       resetDetailPanel();

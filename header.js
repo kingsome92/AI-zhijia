@@ -35,41 +35,75 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 下拉菜单点击事件委托
   document.addEventListener('click', function(e) {
-    // 关闭所有打开的下拉菜单
-    const openDropdowns = document.querySelectorAll('.dropdown-menu');
-    openDropdowns.forEach(dropdown => {
-      if (!dropdown.contains(e.target) && !dropdown.previousElementSibling.contains(e.target)) {
-        dropdown.style.opacity = '0';
-        dropdown.style.visibility = 'hidden';
-        dropdown.style.transform = 'translateY(8px)';
-      }
-    });
-    
-    // 处理当前点击的下拉菜单
-    if (e.target.closest('.dropdown')) {
-      const dropdown = e.target.closest('.dropdown').querySelector('.dropdown-menu');
-      const isVisible = dropdown.style.visibility === 'visible';
-      
-      // 关闭所有其他下拉菜单
+    console.log('点击事件触发:', e.target, e.target.closest('.nav-link'));
+    // 如果点击的是下拉菜单项，直接跳转，不处理下拉菜单的显示/隐藏
+    if (e.target.closest('.dropdown-item')) {
+      // 关闭所有下拉菜单
       document.querySelectorAll('.dropdown-menu').forEach(menu => {
-        if (menu !== dropdown) {
-          menu.style.opacity = '0';
-          menu.style.visibility = 'hidden';
-          menu.style.transform = 'translateY(8px)';
-        }
+        menu.style.opacity = '0';
+        menu.style.visibility = 'hidden';
+        menu.style.transform = 'translateY(8px)';
       });
-      
-      // 切换当前下拉菜单
-      if (isVisible) {
-        dropdown.style.opacity = '0';
-        dropdown.style.visibility = 'hidden';
-        dropdown.style.transform = 'translateY(8px)';
-      } else {
-        dropdown.style.opacity = '1';
-        dropdown.style.visibility = 'visible';
-        dropdown.style.transform = 'translateY(0)';
+      return;
+    }
+    
+    // 如果点击的是下拉菜单的触发链接（.nav-link），阻止默认行为并切换下拉菜单
+    const navLink = e.target.closest('.nav-link');
+    if (navLink) {
+      const href = navLink.getAttribute('href');
+      if (href === '#' || href === null) {
+        e.preventDefault();
+        e.stopPropagation();
+        const dropdown = navLink.closest('.dropdown');
+        if (dropdown) {
+          const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+          if (dropdownMenu) {
+            // 检查当前是否可见（通过内联样式或计算样式）
+            const computedStyle = window.getComputedStyle(dropdownMenu);
+            const isVisible = dropdownMenu.style.visibility === 'visible' || 
+                             dropdownMenu.style.opacity === '1' ||
+                             (dropdownMenu.style.visibility !== 'hidden' && 
+                              computedStyle.visibility === 'visible' && 
+                              computedStyle.opacity !== '0');
+            
+            // 关闭所有其他下拉菜单
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+              if (menu !== dropdownMenu) {
+                menu.style.opacity = '0';
+                menu.style.visibility = 'hidden';
+                menu.style.transform = 'translateY(8px)';
+              }
+            });
+            
+            // 切换当前下拉菜单
+            if (isVisible) {
+              console.log('关闭下拉菜单');
+              dropdownMenu.style.opacity = '0';
+              dropdownMenu.style.visibility = 'hidden';
+              dropdownMenu.style.transform = 'translateY(8px)';
+            } else {
+              console.log('打开下拉菜单', dropdownMenu);
+              dropdownMenu.style.opacity = '1';
+              dropdownMenu.style.visibility = 'visible';
+              dropdownMenu.style.transform = 'translateY(0)';
+            }
+          }
+        }
+        return;
       }
     }
+    
+    // 如果点击的是下拉菜单本身，不关闭
+    if (e.target.closest('.dropdown-menu')) {
+      return;
+    }
+    
+    // 点击其他地方时，关闭所有下拉菜单
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+      menu.style.opacity = '0';
+      menu.style.visibility = 'hidden';
+      menu.style.transform = 'translateY(8px)';
+    });
   });
   
   // 移动端菜单切换（如果需要）

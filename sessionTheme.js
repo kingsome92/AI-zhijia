@@ -114,8 +114,10 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
-  // 模板数据存储
-  let templates = {
+  // ========== 模板数据存储（localStorage持久化，供“应用管理”模块复用） ==========
+  const TEMPLATE_STORAGE_KEY = 'sessionTemplates';
+
+  const defaultTemplates = {
     'default': {
       name: '默认配置',
       sessionLimit: 10,
@@ -217,9 +219,59 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     }
   };
+
+  function loadTemplatesFromStorage() {
+    try {
+      const raw = localStorage.getItem(TEMPLATE_STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') return null;
+      return parsed;
+    } catch (e) {
+      console.warn('读取会话模板缓存失败，使用默认模板:', e);
+      return null;
+    }
+  }
+
+  function persistTemplates() {
+    try {
+      localStorage.setItem(TEMPLATE_STORAGE_KEY, JSON.stringify(templates));
+    } catch (e) {
+      console.warn('保存会话模板缓存失败:', e);
+    }
+  }
+
+  // 模板数据（优先读取localStorage，否则写入默认模板）
+  let templates = loadTemplatesFromStorage() || JSON.parse(JSON.stringify(defaultTemplates));
+  persistTemplates();
   
   // 当前选中的模板ID
   let currentTemplateId = 'default';
+
+  // 重建模板下拉选项（支持自定义模板）
+  function rebuildTemplateSelectOptions() {
+    const templateSelect = document.getElementById('template');
+    if (!templateSelect) return;
+
+    const placeholder = templateSelect.querySelector('option[value=""]');
+    templateSelect.innerHTML = '';
+    if (placeholder) {
+      templateSelect.appendChild(placeholder);
+    } else {
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.disabled = true;
+      opt.textContent = '-- 选择模板 --';
+      templateSelect.appendChild(opt);
+    }
+
+    Object.keys(templates).forEach((id) => {
+      const option = document.createElement('option');
+      option.value = id;
+      option.textContent = templates[id]?.name || id;
+      templateSelect.appendChild(option);
+    });
+  }
   
   // 加载模板配置到表单
   function loadTemplateConfig(templateId) {
@@ -285,6 +337,8 @@ document.addEventListener("DOMContentLoaded", function() {
       openingMessage: document.getElementById('openingMessage').value,
       inputPlaceholder: document.getElementById('inputPlaceholder').value
     };
+
+    persistTemplates();
   }
   
   // 模板选择变化事件
@@ -369,13 +423,11 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // 添加到模板列表
     templates[newTemplateId] = newTemplate;
+    persistTemplates();
     
     // 添加到下拉选择框
+    rebuildTemplateSelectOptions();
     const templateSelect = document.getElementById('template');
-    const option = document.createElement('option');
-    option.value = newTemplateId;
-    option.textContent = templateName;
-    templateSelect.appendChild(option);
     
     // 选中新创建的模板
     templateSelect.value = newTemplateId;
@@ -410,6 +462,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // 保存当前配置到选中的模板
     saveCurrentConfigToTemplate(selectedTemplate);
+    persistTemplates();
     showAlert(`模板 "${templates[selectedTemplate].name}" 已保存`, 'success');
   });
 
@@ -1394,6 +1447,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
   // 初始化模板配置
   try {
+    rebuildTemplateSelectOptions();
     loadTemplateConfig('default');
     
     // 显示模板配置区域

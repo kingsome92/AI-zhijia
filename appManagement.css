@@ -1,0 +1,264 @@
+/* ============================================
+   应用管理页面 - 页面特定样式
+   基础组件样式请参考 css/ant-base.css
+   ============================================ */
+
+/* 引入公共样式库 */
+@import url('css/ant-base.css');
+
+/* ========== 页面布局 ========== */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--ant-margin-lg);
+}
+
+/* ========== 页面标题 ========== */
+.page-header {
+  margin-bottom: var(--ant-margin-lg);
+}
+
+.page-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ant-text-color);
+  display: flex;
+  align-items: center;
+  gap: var(--ant-margin-xs);
+  margin-bottom: var(--ant-margin-xs);
+}
+
+.page-header .subtitle {
+  color: var(--ant-text-color-secondary);
+  font-size: 14px;
+}
+
+/* ========== 工具栏 ========== */
+.app-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ant-margin-md);
+  margin-bottom: var(--ant-margin-md);
+  flex-wrap: nowrap;
+}
+
+.app-toolbar .ant-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.app-search-wrapper {
+  flex: 0 1 auto;
+  width: 100%;
+  max-width: 400px;
+  min-width: 280px;
+}
+
+/* 搜索框和按钮之间的间距优化 */
+.app-search-wrapper .ant-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0; /* 由按钮的 margin-left 控制间距 */
+}
+
+@media (max-width: 768px) {
+  .app-toolbar {
+    flex-wrap: wrap;
+  }
+  
+  .app-search-wrapper {
+    max-width: 100%;
+    min-width: 100%;
+  }
+}
+
+/* ========== 表格容器 ========== */
+.ant-card .ant-table-wrapper {
+  margin-top: 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+.ant-card .ant-table {
+  border: none;
+}
+
+/* ========== 空状态 ========== */
+.empty-state {
+  text-align: center;
+  padding: var(--ant-margin-xxl) var(--ant-margin-md);
+}
+
+/* ========== 状态标签 ========== */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.status-draft {
+  background: rgba(250, 173, 20, 0.18);
+  color: #8a6d00;
+}
+
+.status-published {
+  background: rgba(82, 196, 26, 0.16);
+  color: #1f7a35;
+}
+
+/* ========== 操作按钮组 ========== */
+.row-actions {
+  display: inline-flex;
+  gap: var(--ant-margin-md);
+  align-items: center;
+  flex-wrap: nowrap; /* 防止换行 */
+  white-space: nowrap; /* 防止文字换行 */
+}
+
+.row-actions .ant-btn-link {
+  padding: 0 4px; /* 添加左右内边距，避免文字紧贴 */
+  height: auto;
+  font-size: 14px;
+  white-space: nowrap; /* 强制文字不换行 */
+  flex-shrink: 0; /* 防止按钮被压缩 */
+  display: inline-flex;
+  align-items: center;
+  gap: 4px; /* 图标和文字之间的间距 */
+}
+
+/* ========== Modal 模态框 ========== */
+.ant-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+}
+
+.ant-modal.show {
+  display: block;
+}
+
+.ant-modal-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+}
+
+.ant-modal-wrap {
+  position: fixed;
+  inset: 0;
+  overflow: auto;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ant-margin-md);
+}
+
+.ant-modal-content {
+  position: relative;
+  background: var(--ant-bg-color-container);
+  border-radius: var(--ant-border-radius);
+  box-shadow: var(--ant-box-shadow-secondary);
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 48px);
+}
+
+.ant-modal-small {
+  max-width: 520px;
+}
+
+.ant-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--ant-padding-md) var(--ant-padding-lg);
+  border-bottom: 1px solid var(--ant-border-color-split);
+}
+
+.ant-modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ant-text-color);
+  display: flex;
+  align-items: center;
+  gap: var(--ant-margin-xs);
+}
+
+.ant-modal-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--ant-text-color-secondary);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--ant-motion-duration-mid) var(--ant-motion-ease-in-out);
+}
+
+.ant-modal-close:hover {
+  color: var(--ant-text-color);
+}
+
+.ant-modal-body {
+  padding: var(--ant-padding-lg);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.ant-modal-footer {
+  padding: var(--ant-padding-md) var(--ant-padding-lg);
+  border-top: 1px solid var(--ant-border-color-split);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--ant-margin-xs);
+}
+
+/* ========== 表单组件 ========== */
+.ant-form-item {
+  margin-bottom: var(--ant-margin-md);
+}
+
+.ant-form-item-label {
+  display: block;
+  margin-bottom: var(--ant-margin-xs);
+}
+
+.ant-form-item-label > span {
+  color: var(--ant-text-color);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.ant-form-item-required {
+  color: var(--ant-error-color);
+  margin-right: 4px;
+}
+
+.ant-form-item-control {
+  width: 100%;
+}
+
+.ant-form-item-control .ant-input {
+  width: 100%;
+}
+
+.ant-form-item-control textarea.ant-input {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
