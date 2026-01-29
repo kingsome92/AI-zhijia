@@ -48,9 +48,15 @@ button {
   background-color: var(--primary-color);
   color: var(--white);
   border: none;
-  padding: 8px 16px;
+  padding: 8px 20px;
+  min-width: 88px;
   border-radius: var(--border-radius);
   font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .btn-primary:hover {
@@ -61,9 +67,15 @@ button {
   background-color: var(--gray-200);
   color: var(--gray-700);
   border: none;
-  padding: 8px 16px;
+  padding: 8px 20px;
+  min-width: 88px;
   border-radius: var(--border-radius);
   font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
 }
 
 .btn-secondary:hover {
@@ -88,11 +100,12 @@ button {
   color: var(--gray-800);
 }
 
-/* 页面容器 */
+/* 页面容器：宽屏适配，版心 1560px */
 .task-list-container {
-  max-width: 1200px;
+  max-width: 1560px;
+  width: 100%;
   margin: 20px auto;
-  padding: 0 20px;
+  padding: 0 1.5rem;
 }
 
 /* 页面标题区域 */
@@ -157,13 +170,13 @@ button {
 
 .batch-actions {
   display: flex;
-  gap: 8px;
+  gap: 0.75rem;
   align-items: center;
 }
 
 .filter-controls {
   display: flex;
-  gap: 8px;
+  gap: 1rem;
 }
 
 select {
@@ -262,7 +275,7 @@ select:focus {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 0.75rem;
 }
 
 .pagination button {
@@ -314,8 +327,12 @@ select:focus {
   border-radius: var(--border-radius);
   width: 100%;
   max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   animation: modalFadeIn 0.3s ease;
+  overflow: hidden;
 }
 
 @keyframes modalFadeIn {
@@ -340,11 +357,12 @@ select:focus {
 }
 
 .modal-header {
-  padding: 16px 20px;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--gray-200);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .modal-header h2 {
@@ -353,15 +371,19 @@ select:focus {
 }
 
 .modal-body {
-  padding: 20px;
+  padding: 1.25rem 1.5rem;
+  max-height: 65vh;
+  overflow-y: auto;
+  flex-shrink: 1;
 }
 
 .modal-footer {
-  padding: 16px 20px;
+  padding: 1rem 1.5rem;
   border-top: 1px solid var(--gray-200);
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 /* 表单样式 */

@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // 点击遮罩关闭
-      const modalEl = e.target.classList?.contains('ant-modal-mask') ? e.target.closest('.ant-modal') : null;
+      const modalEl = e.target.classList?.contains('modal-mask') ? e.target.closest('.modal') : null;
       if (modalEl && modalEl.classList.contains('show')) {
         closeModal(modalEl);
       }
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        document.querySelectorAll('.ant-modal.show').forEach((m) => closeModal(m));
+        document.querySelectorAll('.modal.show').forEach((m) => closeModal(m));
       }
     });
   }
@@ -222,9 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filtered.length === 0) {
       appTableBody.innerHTML = `
         <tr>
-          <td colspan="6" style="text-align:center;color:var(--ant-text-color-secondary);padding:2rem;">
-            无匹配结果
-          </td>
+          <td colspan="6" class="no-data">无匹配结果</td>
         </tr>
       `;
       return;
@@ -240,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <tr>
             <td>${idx + 1}</td>
             <td><strong>${escapeHtml(app.name || '-')}</strong></td>
-            <td style="color: var(--ant-text-color-secondary);">${escapeHtml(app.description || '-')}</td>
+            <td class="text-secondary">${escapeHtml(app.description || '-')}</td>
             <td>
               <span class="status-badge ${badgeClass}">
                 <i class="bi ${badgeIcon}"></i>${badgeText}
@@ -249,14 +247,14 @@ document.addEventListener('DOMContentLoaded', () => {
             <td>${formatTime(app.updatedAt)}</td>
             <td>
               <div class="row-actions">
-                <button class="ant-btn ant-btn-link" data-action="edit" data-id="${escapeAttr(app.id)}">
+                <button type="button" class="btn btn-link" data-action="edit" data-id="${escapeAttr(app.id)}">
                   <i class="bi bi-pencil"></i> 编辑
                 </button>
-                <button class="ant-btn ant-btn-link" data-action="toggle" data-id="${escapeAttr(app.id)}">
+                <button type="button" class="btn btn-link" data-action="toggle" data-id="${escapeAttr(app.id)}">
                   <i class="bi ${isPublished ? 'bi-arrow-counterclockwise' : 'bi-upload'}"></i>
                   ${isPublished ? '回到草稿' : '快速发布'}
                 </button>
-                <button class="ant-btn ant-btn-link ant-btn-link-danger" data-action="delete" data-id="${escapeAttr(app.id)}">
+                <button type="button" class="btn btn-link btn-link-danger" data-action="delete" data-id="${escapeAttr(app.id)}">
                   <i class="bi bi-trash"></i> 删除
                 </button>
               </div>

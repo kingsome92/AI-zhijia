@@ -48,10 +48,10 @@ body {
   flex-direction: column;
 }
 
-/* 容器布局 */
+/* 容器布局：宽屏适配，版心 1560px */
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1560px;
   margin: 2rem auto;
   padding: 0 1.5rem;
   flex: 1;
@@ -370,7 +370,7 @@ body {
 
 .form-actions {
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 .agent-form {
@@ -491,6 +491,8 @@ body {
   background-color: var(--gray-50);
   border-bottom: 1px solid var(--gray-200);
   flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .config-header h3 {
@@ -503,14 +505,28 @@ body {
   gap: 0.5rem;
 }
 
+.config-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .config-toolbar {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   align-items: center;
   flex-shrink: 0;
 }
 
-/* 按钮样式 */
+.config-primary-buttons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* 按钮样式：统一最小宽度与内边距 */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -523,11 +539,13 @@ body {
   user-select: none;
   background-color: transparent;
   border: 1px solid transparent;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.25rem;
+  min-width: 88px;
   font-size: 0.875rem;
   line-height: 1.5;
   border-radius: var(--border-radius);
   transition: var(--transition);
+  white-space: nowrap;
 }
 
 .btn-icon {
@@ -682,14 +700,6 @@ body {
   color: var(--gray-400);
 }
 
-.config-actions {
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--gray-200);
-  display: flex;
-  gap: 0.75rem;
-  flex-shrink: 0;
-  background-color: var(--white);
-}
 
 /* 状态区域 */
 .config-status {
@@ -939,6 +949,9 @@ body {
   box-shadow: var(--box-shadow-lg);
   width: 90%;
   max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
@@ -946,8 +959,9 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--gray-200);
+  flex-shrink: 0;
 }
 
 .modal-header h3 {
@@ -978,7 +992,10 @@ body {
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  max-height: 65vh;
+  overflow-y: auto;
+  flex-shrink: 1;
 }
 
 .modal-footer {
@@ -987,6 +1004,7 @@ body {
   display: flex;
   justify-content: flex-end;
   gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 /* 响应式设计 */

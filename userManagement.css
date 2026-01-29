@@ -32,10 +32,12 @@ body {
   background-color: var(--bg-color);
 }
 
+/* 版心：宽屏适配，主流 1920px 下使用 1560px 内容区，留出边距 */
 .container {
-  max-width: 1200px;
+  max-width: 1560px;
+  width: 100%;
   margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 }
 
 /* 页面标题 */
@@ -102,7 +104,7 @@ body {
 .filter-group {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
@@ -120,9 +122,10 @@ body {
   border-color: var(--primary-color);
 }
 
-/* 按钮样式 */
+/* 按钮样式：统一最小宽度与内边距，提升可点击性与视觉一致性 */
 .btn {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.25rem;
+  min-width: 88px;
   border: none;
   border-radius: var(--radius);
   background-color: var(--light-color);
@@ -131,8 +134,10 @@ body {
   transition: var(--transition);
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .btn:hover {
@@ -250,6 +255,9 @@ body {
   border-radius: var(--radius);
   width: 100%;
   max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   animation: modalFadeIn 0.3s ease;
 }
@@ -266,11 +274,12 @@ body {
 }
 
 .modal-header {
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .modal-header h3 {
@@ -292,7 +301,10 @@ body {
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  max-height: 65vh;
+  overflow-y: auto;
+  flex-shrink: 1;
 }
 
 .form-group {
@@ -413,7 +425,7 @@ body {
 
 .batch-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
   align-items: center;
 }
@@ -440,9 +452,16 @@ body {
   cursor: pointer;
 }
 
-/* 设置管理模态框 */
+/* 设置管理模态框：宽度适中，高度由内容+max-height 控制 */
 .settings-modal-content {
-  max-width: 600px;
+  max-width: 560px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-modal-content .modal-body {
+  max-height: 60vh;
 }
 
 .settings-form-section {
@@ -458,7 +477,7 @@ body {
 
 .settings-form-group {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin-bottom: 1rem;
 }
 
@@ -499,11 +518,12 @@ body {
 }
 
 .modal-footer {
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 /* 时间显示样式 */

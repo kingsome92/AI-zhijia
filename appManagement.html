@@ -6,24 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>应用管理</title>
   <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-  <!-- Ant Design 公共样式库 -->
-  <link rel="stylesheet" href="css/ant-base.css">
-  <!-- 页面特定样式 -->
   <link rel="stylesheet" href="appManagement.css">
   <!-- 公共组件样式 -->
   <link rel="stylesheet" href="header.css">
   <link rel="stylesheet" href="footer.css">
 </head>
-<body>
+<body class="page-compact-footer">
   <div id="header-container"><div class="header-component">
   <div class="header-container">
     <div class="logo-container">
-      <img 
-        loading="lazy" 
-        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
-        alt="AI智能体管理后台" 
-        class="logo"
-      >
+      <span class="logo">AI综合服务后台</span>
     </div>
     
     <nav class="main-nav">
@@ -90,21 +82,21 @@
       <p class="subtitle">创建、维护、管理应用；应用内可绑定会话模板/大模型/工具并配置 Prompt 与数据库能力</p>
     </div>
 
-    <div class="ant-card">
+    <div class="app-card">
       <!-- 工具栏 -->
       <div class="app-toolbar">
-        <button class="ant-btn ant-btn-primary" id="createAppBtn">
+        <button class="btn btn-primary" id="createAppBtn">
           <i class="bi bi-plus-circle"></i> 创建应用
         </button>
         <div class="app-search-wrapper">
-          <div class="ant-input-wrapper ant-input-group">
-            <input 
-              id="appSearch" 
-              type="text" 
-              class="ant-input ant-input-search" 
+          <div class="search-input-group">
+            <input
+              id="appSearch"
+              type="text"
+              class="search-input"
               placeholder="搜索应用名称/描述..."
             >
-            <button class="ant-input-search-button">
+            <button type="button" class="search-btn" aria-label="搜索">
               <i class="bi bi-search"></i>
             </button>
           </div>
@@ -112,53 +104,29 @@
       </div>
 
       <!-- 表格容器 -->
-      <div class="ant-table-wrapper">
-        <div class="ant-spin-nested-loading">
-          <div class="ant-spin-container">
-            <div class="ant-table ant-table-middle">
-              <div class="ant-table-container">
-                <div class="ant-table-content">
-                  <table class="ant-table-tbody">
-                    <thead class="ant-table-thead">
-                      <tr>
-                        <th class="ant-table-cell" style="width: 56px;">
-                          <span class="ant-table-column-title">序号</span>
-                        </th>
-                        <th class="ant-table-cell">
-                          <span class="ant-table-column-title">应用名称</span>
-                        </th>
-                        <th class="ant-table-cell">
-                          <span class="ant-table-column-title">描述</span>
-                        </th>
-                        <th class="ant-table-cell" style="width: 120px;">
-                          <span class="ant-table-column-title">状态</span>
-                        </th>
-                        <th class="ant-table-cell" style="width: 180px;">
-                          <span class="ant-table-column-title">最近更新</span>
-                        </th>
-              <th class="ant-table-cell" style="width: 240px; min-width: 240px;">
-                <span class="ant-table-column-title">操作</span>
-              </th>
-                      </tr>
-                    </thead>
-                    <tbody class="ant-table-tbody" id="appTableBody">
-                      <!-- 应用数据将通过JavaScript动态加载 -->
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="table-wrapper">
+        <table class="app-table">
+          <thead>
+            <tr>
+              <th class="col-index">序号</th>
+              <th>应用名称</th>
+              <th>描述</th>
+              <th class="col-status">状态</th>
+              <th class="col-time">最近更新</th>
+              <th class="col-actions">操作</th>
+            </tr>
+          </thead>
+          <tbody id="appTableBody">
+            <!-- 应用数据将通过 JavaScript 动态加载 -->
+          </tbody>
+        </table>
       </div>
 
       <!-- 空状态 -->
       <div class="empty-state" id="emptyState" style="display:none;">
-        <i class="bi bi-inbox" style="font-size: 48px; color: var(--ant-text-color-disabled);"></i>
-        <h3 style="margin-top: var(--ant-margin-md); color: var(--ant-text-color);">暂无应用</h3>
-        <p style="color: var(--ant-text-color-secondary); margin-top: var(--ant-margin-xs);">
-          点击"创建应用"开始配置一个完整应用（模板/大模型/工具/Prompt/数据库）
-        </p>
+        <i class="bi bi-inbox" aria-hidden="true"></i>
+        <h3>暂无应用</h3>
+        <p>点击「创建应用」开始配置一个完整应用（模板/大模型/工具/Prompt/数据库）</p>
       </div>
     </div>
   </main>
@@ -210,7 +178,7 @@
     </div>
     <div class="footer-bottom">
       <div class="copyright">
-        &copy; 2023 AI智能体管理平台. 保留所有权利.
+        &copy; 2026 AI智能体管理平台. 保留所有权利.
       </div>
       <div class="legal-links">
         <a href="/privacy" class="footer-link">隐私政策</a>
@@ -229,72 +197,51 @@
 </div></div>
 
   <!-- 创建应用模态框 -->
-  <div class="ant-modal" id="createAppModal" aria-hidden="true">
-    <div class="ant-modal-mask"></div>
-    <div class="ant-modal-wrap">
-      <div class="ant-modal-content ant-modal-small">
-        <div class="ant-modal-header">
+  <div class="modal" id="createAppModal" aria-hidden="true">
+    <div class="modal-mask"></div>
+    <div class="modal-wrap">
+      <div class="modal-content">
+        <div class="modal-header">
           <h3><i class="bi bi-plus-circle"></i> 创建应用</h3>
-          <button class="ant-modal-close" data-close="createAppModal" aria-label="关闭">
+          <button type="button" class="modal-close" data-close="createAppModal" aria-label="关闭">
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
-        <div class="ant-modal-body">
-          <div class="ant-form-item">
-            <label class="ant-form-item-label" for="newAppName">
-              <span>应用名称 <span class="ant-form-item-required">*</span></span>
-            </label>
-            <div class="ant-form-item-control">
-              <input 
-                type="text" 
-                id="newAppName" 
-                class="ant-input" 
-                placeholder="例如：带图形的题目生成" 
-              />
-            </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="newAppName">应用名称 <span class="required">*</span></label>
+            <input type="text" id="newAppName" class="form-control" placeholder="例如：带图形的题目生成">
           </div>
-          <div class="ant-form-item">
-            <label class="ant-form-item-label" for="newAppDesc">
-              <span>描述</span>
-            </label>
-            <div class="ant-form-item-control">
-              <textarea 
-                id="newAppDesc" 
-                class="ant-input" 
-                rows="3" 
-                placeholder="例如：根据题干生成解析并输出带图形的题目..."
-                style="resize: vertical; min-height: 80px;"
-              ></textarea>
-            </div>
+          <div class="form-group">
+            <label for="newAppDesc">描述</label>
+            <textarea id="newAppDesc" class="form-control" rows="3" placeholder="例如：根据题干生成解析并输出带图形的题目..."></textarea>
           </div>
         </div>
-        <div class="ant-modal-footer">
-          <button class="ant-btn ant-btn-default" data-close="createAppModal">取消</button>
-          <button class="ant-btn ant-btn-primary" id="confirmCreateApp">创建并编辑</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-close="createAppModal">取消</button>
+          <button type="button" class="btn btn-primary" id="confirmCreateApp">创建并编辑</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- 删除确认模态框 -->
-  <div class="ant-modal" id="deleteAppModal" aria-hidden="true">
-    <div class="ant-modal-mask"></div>
-    <div class="ant-modal-wrap">
-      <div class="ant-modal-content ant-modal-small">
-        <div class="ant-modal-header">
+  <div class="modal" id="deleteAppModal" aria-hidden="true">
+    <div class="modal-mask"></div>
+    <div class="modal-wrap">
+      <div class="modal-content">
+        <div class="modal-header">
           <h3><i class="bi bi-exclamation-triangle"></i> 确认删除</h3>
-          <button class="ant-modal-close" data-close="deleteAppModal" aria-label="关闭">
+          <button type="button" class="modal-close" data-close="deleteAppModal" aria-label="关闭">
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
-        <div class="ant-modal-body">
-          <p style="color: var(--ant-text-color);">
-            确定要删除应用 "<span id="deleteAppName" style="font-weight: 600;"></span>" 吗？此操作不可恢复。
-          </p>
+        <div class="modal-body">
+          <p>确定要删除应用「<span id="deleteAppName"></span>」吗？此操作不可恢复。</p>
         </div>
-        <div class="ant-modal-footer">
-          <button class="ant-btn ant-btn-default" data-close="deleteAppModal">取消</button>
-          <button class="ant-btn" id="confirmDeleteApp" style="background: var(--ant-error-color); border-color: var(--ant-error-color); color: #fff;">
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-close="deleteAppModal">取消</button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteApp">
             <i class="bi bi-trash"></i> 确认删除
           </button>
         </div>
@@ -302,9 +249,6 @@
     </div>
   </div>
 
-  <!-- 公共工具函数库 -->
-  <script src="js/ant-common.js"></script>
-  <!-- 页面特定脚本 -->
   <script src="appManagement.js"></script>
   <!-- 公共组件脚本 -->
   <script src="header.js"></script>

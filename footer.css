@@ -127,6 +127,39 @@
   font-size: 0.8rem;
 }
 
+/* ========== 紧凑页脚 + 粘性布局（body 带 .page-compact-footer 时生效）========== */
+.page-compact-footer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-compact-footer main {
+  flex: 1;
+}
+
+.page-compact-footer #footer-container {
+  flex-shrink: 0;
+}
+
+.page-compact-footer #footer-container .footer-links {
+  display: none;
+}
+
+.page-compact-footer #footer-container .footer-component {
+  padding-top: 0;
+  margin-top: 1.5rem;
+}
+
+.page-compact-footer #footer-container .footer-bottom {
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.page-compact-footer #footer-container .footer-container {
+  padding-top: 0;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .footer-links {

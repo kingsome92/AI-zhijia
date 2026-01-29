@@ -42,11 +42,11 @@ body {
   flex-direction: column;
 }
 
-/* 主内容区域 */
+/* 主内容区域：宽屏适配，版心 1560px */
 .model-config-container {
   flex: 1;
-  padding: 2rem;
-  max-width: 1200px;
+  padding: 2rem 1.5rem;
+  max-width: 1560px;
   margin: 0 auto;
   width: 100%;
 }
@@ -200,6 +200,7 @@ input[type="range"].form-control::-webkit-slider-thumb:hover {
   gap: 1rem;
   margin-top: 1.5rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .btn {
@@ -214,6 +215,7 @@ input[type="range"].form-control::-webkit-slider-thumb:hover {
   user-select: none;
   border: 1px solid transparent;
   padding: 0.75rem 1.5rem;
+  min-width: 88px;
   font-size: 1rem;
   line-height: 1.5;
   border-radius: var(--border-radius);
@@ -362,7 +364,7 @@ input[type="range"].form-control::-webkit-slider-thumb:hover {
 
 .model-item-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
@@ -446,6 +448,7 @@ input[type="range"].form-control::-webkit-slider-thumb:hover {
   flex-direction: column;
   animation: slideUp 0.3s ease-out;
   margin: auto;
+  overflow: hidden;
 }
 
 .modal-sm {
@@ -456,8 +459,9 @@ input[type="range"].form-control::-webkit-slider-thumb:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--gray-200);
+  flex-shrink: 0;
 }
 
 .modal-header h2 {
@@ -492,17 +496,19 @@ input[type="range"].form-control::-webkit-slider-thumb:hover {
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  max-height: 65vh;
   overflow-y: auto;
-  flex: 1;
+  flex-shrink: 1;
 }
 
 .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
   border-top: 1px solid var(--gray-200);
+  flex-shrink: 0;
 }
 
 .form-row {

@@ -279,14 +279,21 @@ main h3 {
   height: 64px;
 }
 
-/* Logo 样式 */
+/* Logo 样式：白底黑字，黑体加粗 22px */
 .logo-container {
   display: flex;
   align-items: center;
 }
 
 .logo {
-  height: 40px;
+  display: inline-block;
+  padding: 0.35em 0.75em;
+  background: #fff;
+  color: #000;
+  font-family: 黑体, SimHei, "Microsoft YaHei", sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
   transition: opacity var(--transition-speed);
 }
 

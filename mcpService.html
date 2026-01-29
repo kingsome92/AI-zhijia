@@ -10,16 +10,11 @@
   <link rel="stylesheet" href="header.css">
   <link rel="stylesheet" href="footer.css">
 </head>
-<body>
+<body class="page-compact-footer">
   <div id="header-container"><div class="header-component">
   <div class="header-container">
     <div class="logo-container">
-      <img 
-        loading="lazy" 
-        src="https://placeholder.pics/svg/150x40/2D3748/FFFFFF/AI管理后台" 
-        alt="AI智能体管理后台" 
-        class="logo"
-      >
+      <span class="logo">AI综合服务后台</span>
     </div>
     
     <nav class="main-nav">
@@ -169,37 +164,38 @@
         <div class="config-container" id="config-container" style="display: none;">
           <div class="config-header">
             <h3><i class="bi bi-code-slash"></i> JSON服务配置</h3>
-            <div class="config-toolbar">
-              <button id="format-btn" class="btn-icon" title="格式化"><i class="bi bi-code-square"></i></button>
-              <button id="minify-btn" class="btn-icon" title="压缩"><i class="bi bi-file-minus"></i></button>
-              <button id="validate-btn" class="btn-icon" title="验证"><i class="bi bi-check-circle"></i></button>
-              <div class="dropdown">
-                <button class="btn-icon dropdown-toggle" id="templateDropdown" title="配置模板">
-                  <i class="bi bi-file-earmark-code"></i>
+            <div class="config-header-actions">
+              <div class="config-toolbar">
+                <button id="format-btn" class="btn-icon" title="格式化"><i class="bi bi-code-square"></i></button>
+                <button id="minify-btn" class="btn-icon" title="压缩"><i class="bi bi-file-minus"></i></button>
+                <button id="validate-btn" class="btn-icon" title="验证"><i class="bi bi-check-circle"></i></button>
+                <div class="dropdown">
+                  <button class="btn-icon dropdown-toggle" id="templateDropdown" title="配置模板">
+                    <i class="bi bi-file-earmark-code"></i>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="templateDropdown">
+                    <li><a class="dropdown-item" href="#" data-template="default">默认模板</a></li>
+                    <li><a class="dropdown-item" href="#" data-template="minimal">最小化模板</a></li>
+                    <li><a class="dropdown-item" href="#" data-template="advanced">高级模板</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" id="import-template"><i class="bi bi-upload"></i> 导入模板</a></li>
+                    <li><a class="dropdown-item" href="#" id="export-template"><i class="bi bi-download"></i> 导出模板</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="config-primary-buttons">
+                <button id="save-config-btn" class="btn primary">
+                  <i class="bi bi-save"></i> 保存配置
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="templateDropdown">
-                  <li><a class="dropdown-item" href="#" data-template="default">默认模板</a></li>
-                  <li><a class="dropdown-item" href="#" data-template="minimal">最小化模板</a></li>
-                  <li><a class="dropdown-item" href="#" data-template="advanced">高级模板</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#" id="import-template"><i class="bi bi-upload"></i> 导入模板</a></li>
-                  <li><a class="dropdown-item" href="#" id="export-template"><i class="bi bi-download"></i> 导出模板</a></li>
-                </ul>
+                <button id="test-config-btn" class="btn">
+                  <i class="bi bi-play-circle"></i> 测试配置
+                </button>
               </div>
             </div>
           </div>
 
           <div class="config-editor">
             <textarea id="json-editor" class="json-editor" spellcheck="false" placeholder="请输入JSON配置..."></textarea>
-          </div>
-
-          <div class="config-actions">
-            <button id="save-config-btn" class="btn primary">
-              <i class="bi bi-save"></i> 保存配置
-            </button>
-            <button id="test-config-btn" class="btn">
-              <i class="bi bi-play-circle"></i> 测试配置
-            </button>
           </div>
 
           <div class="config-status">
@@ -375,7 +371,7 @@
     </div>
     <div class="footer-bottom">
       <div class="copyright">
-        &copy; 2023 AI智能体管理平台. 保留所有权利.
+        &copy; 2026 AI智能体管理平台. 保留所有权利.
       </div>
       <div class="legal-links">
         <a href="/privacy" class="footer-link">隐私政策</a>

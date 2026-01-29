@@ -32,11 +32,12 @@ body {
   line-height: 1.6;
 }
 
-/* 页面容器 */
+/* 页面容器：宽屏适配，版心 1560px */
 .account-management-container {
-  max-width: 1200px;
+  max-width: 1560px;
+  width: 100%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 1.5rem;
 }
 
 /* 页面标题 */
@@ -85,7 +86,7 @@ body {
 .filter-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 1rem;
   align-items: flex-end;
 }
 
@@ -118,14 +119,17 @@ body {
 }
 
 button {
-  padding: 8px 16px;
+  padding: 8px 20px;
+  min-width: 88px;
   border-radius: var(--radius);
   font-size: 14px;
   cursor: pointer;
   transition: var(--transition);
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  white-space: nowrap;
 }
 
 .search-btn {
@@ -266,7 +270,7 @@ button {
   justify-content: center;
   align-items: center;
   margin-top: 20px;
-  gap: 15px;
+  gap: 1rem;
 }
 
 .pagination-btn {
@@ -314,15 +318,20 @@ button {
   border-radius: var(--radius);
   width: 500px;
   max-width: 90%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 
 .modal-header {
-  padding: 15px 20px;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .modal-header h3 {
@@ -344,7 +353,10 @@ button {
 }
 
 .modal-body {
-  padding: 20px;
+  padding: 1.25rem 1.5rem;
+  max-height: 65vh;
+  overflow-y: auto;
+  flex-shrink: 1;
 }
 
 .modal-body p {
@@ -370,11 +382,12 @@ button {
 }
 
 .modal-footer {
-  padding: 15px 20px;
+  padding: 1rem 1.5rem;
   border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 .cancel-btn {
