@@ -308,12 +308,13 @@ body {
   color: var(--danger-color);
 }
 
-/* 工具详情面板 */
+/* 工具详情面板：允许纵向滚动，保证表单与 JSON 配置区都能看到 */
 .agent-detail-panel {
   background-color: var(--white);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--box-shadow);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   min-height: 600px;
@@ -469,13 +470,13 @@ body {
   margin-top: 0.25rem;
 }
 
-/* 配置容器 */
+/* 配置容器：保证编辑区至少可见，可参与伸缩 */
 .config-container {
-  flex: 1;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-height: 500px;
+  min-height: 360px;
   margin-top: 1.5rem;
   background-color: var(--white);
   border-radius: var(--border-radius-lg);
@@ -662,12 +663,12 @@ body {
   border-top: 1px solid var(--gray-200);
 }
 
-/* 编辑器区域 */
+/* 编辑器区域：min-height: 0 使 flex 子项可收缩，保证在有限高度内也能显示 */
 .config-editor {
-  flex: 1;
+  flex: 1 1 0;
+  min-height: 0;
   position: relative;
   overflow: hidden;
-  min-height: 400px;
   display: flex;
   flex-direction: column;
 }
@@ -675,8 +676,9 @@ body {
 .json-editor {
   width: 100%;
   height: 100%;
-  min-height: 400px;
+  min-height: 200px;
   padding: 1.25rem;
+  box-sizing: border-box;
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
   font-size: 0.875rem;
   line-height: 1.6;
@@ -687,7 +689,6 @@ body {
   resize: vertical;
   outline: none;
   tab-size: 2;
-  box-sizing: border-box;
 }
 
 .json-editor:focus {
