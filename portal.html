@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>我的用量 - AI综合服务</title>
+  <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="user.css">
+  <script src="https://gcore.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="user-page user-portal-page">
+  <div class="user-header">
+    <span class="user-logo">AI综合服务</span>
+    <div class="portal-header-row">
+      <span class="portal-user"><i class="bi bi-person-circle"></i> <span id="user-phone-display">--</span></span>
+      <button type="button" class="portal-logout" id="logout-btn">退出</button>
+    </div>
+    <div class="balance-card">
+      <div class="balance-label">账户余额</div>
+      <div class="balance-value" id="balance-display">0 <span>万 tokens</span></div>
+      <div class="recharge-hint">
+        如需充值，请<a href="mailto:support@aiplatform.com">联系管理员</a>或拨打客服电话。充值功能即将上线。
+      </div>
+    </div>
+  </div>
+
+  <main class="user-main">
+    <div class="portal-tabs" role="tablist">
+      <button type="button" class="portal-tab active" data-tab="overview">用量概况</button>
+      <button type="button" class="portal-tab" data-tab="usage-list">用量清单</button>
+    </div>
+
+    <!-- 用量概况 -->
+    <section class="portal-section active" id="overview-section">
+      <div class="filter-row">
+        <label for="time-range">时间范围</label>
+        <select id="time-range">
+          <option value="today" selected>今日</option>
+          <option value="week">本周</option>
+          <option value="month">本月</option>
+          <option value="custom">自定义</option>
+        </select>
+        <div id="custom-range" style="display:none;">
+          <input type="date" id="start-date">
+          <input type="date" id="end-date">
+        </div>
+        <button type="button" class="btn-secondary" id="apply-filter"><i class="bi bi-funnel"></i> 筛选</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>调用次数</h3>
+          <p class="stat-value" id="stat-calls">0 <span></span></p>
+        </div>
+        <div class="stat-card">
+          <h3>Token 消耗</h3>
+          <p class="stat-value" id="stat-tokens">0 <span>万</span></p>
+        </div>
+        <div class="stat-card">
+          <h3>账户余额</h3>
+          <p class="stat-value" id="stat-balance">0 <span>万 tokens</span></p>
+        </div>
+      </div>
+
+      <div class="charts-container">
+        <div class="chart-card">
+          <h3 class="chart-title">调用次数趋势</h3>
+          <canvas id="calls-chart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3 class="chart-title">Token 消耗趋势</h3>
+          <canvas id="tokens-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- 用量清单 -->
+    <section class="portal-section" id="usage-list-section">
+      <form id="usage-list-form" class="query-form">
+        <div class="form-row">
+          <div class="form-field">
+            <label>交易类型</label>
+            <select id="transaction-filter">
+              <option value="all">全部</option>
+              <option value="consume">消费</option>
+              <option value="recharge">充入</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>开始时间</label>
+            <input type="date" id="list-start-date">
+          </div>
+          <div class="form-field">
+            <label>结束时间</label>
+            <input type="date" id="list-end-date">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary"><i class="bi bi-search"></i> 查询</button>
+            <button type="button" class="btn-secondary" id="list-reset">重置</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="usage-table-wrap">
+        <div class="table-responsive">
+          <table class="usage-table">
+            <thead>
+              <tr>
+                <th>编号</th>
+                <th>时间</th>
+                <th>交易类型</th>
+                <th>tokens(万)</th>
+                <th>余额(万tokens)</th>
+              </tr>
+            </thead>
+            <tbody id="usage-table-body"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="usage-empty-state">
+          <i class="bi bi-inbox"></i>
+          <p>当前筛选条件下暂无用量记录</p>
+        </div>
+        <div class="pagination-row" id="usage-pagination">
+          <button type="button" data-dir="prev" id="prev-page"><i class="bi bi-chevron-left"></i></button>
+          <span id="page-info">第 1 页 / 共 0 条</span>
+          <button type="button" data-dir="next" id="next-page"><i class="bi bi-chevron-right"></i></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="user-footer">
+    <p>&copy; AI综合服务管理平台</p>
+  </div>
+
+  <script src="user.js"></script>
+  <script>
+    (function() {
+      if (!sessionStorage.getItem('user_logged_in')) {
+        window.location.href = 'login.html';
+        return;
+      }
+      var phone = sessionStorage.getItem('user_phone') || '--';
+      document.getElementById('user-phone-display').textContent = phone;
+
+      document.getElementById('logout-btn').addEventListener('click', function() {
+        sessionStorage.removeItem('user_logged_in');
+        sessionStorage.removeItem('user_phone');
+        window.location.href = 'login.html';
+      });
+
+      // 用量清单 mock 数据 - 生成更多数据
+      function generateMockList() {
+        var list = [];
+        var types = ['VIP', '普通', '试用'];
+        var baseDate = new Date();
+        baseDate.setDate(baseDate.getDate() - 30); // 从30天前开始
+        var balance = 200;
+        var idCounter = 1;
+        
+        // 先生成一些充入记录
+        for (var i = 0; i < 5; i++) {
+          var date = new Date(baseDate);
+          date.setDate(date.getDate() + i * 6);
+          var dateStr = date.getFullYear() + '-' + 
+                       String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                       String(date.getDate()).padStart(2, '0') + ' ' +
+                       String(10 + i).padStart(2, '0') + ':00';
+          
+          var tokens = (Math.random() * 50 + 50).toFixed(2);
+          balance += parseFloat(tokens);
+          
+          list.push({
+            id: String(idCounter++),
+            time: dateStr,
+            level: '1',
+            type: 'VIP',
+            trans: '充入',
+            tokens: tokens,
+            balance: balance.toFixed(2)
+          });
+        }
+        
+        // 生成消费记录（确保包含今天的数据）
+        var today = new Date();
+        var todayStr = today.getFullYear() + '-' + 
+                      String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                      String(today.getDate()).padStart(2, '0');
+        
+        // 先为今天生成几条记录
+        for (var i = 0; i < 5; i++) {
+          var hour = 9 + i * 2;
+          var minute = (i % 3) * 20;
+          var dateStr = todayStr + ' ' +
+                       String(hour).padStart(2, '0') + ':' + 
+                       String(minute).padStart(2, '0');
+          
+          var tokens = (Math.random() * 1.5 + 0.2).toFixed(2);
+          balance -= parseFloat(tokens);
+          balance = Math.max(0, balance);
+          
+          list.push({
+            id: String(idCounter++),
+            time: dateStr,
+            level: String(Math.floor(Math.random() * 3) + 1),
+            type: types[Math.floor(Math.random() * types.length)],
+            trans: '消费',
+            tokens: tokens,
+            balance: balance.toFixed(2)
+          });
+        }
+        
+        // 生成历史消费记录
+        for (var i = 0; i < 40; i++) {
+          var date = new Date(baseDate);
+          date.setDate(date.getDate() + Math.floor(i / 2));
+          var hour = 8 + (i % 14);
+          var minute = (i % 4) * 15;
+          var dateStr = date.getFullYear() + '-' + 
+                       String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                       String(date.getDate()).padStart(2, '0') + ' ' +
+                       String(hour).padStart(2, '0') + ':' + 
+                       String(minute).padStart(2, '0');
+          
+          var tokens = (Math.random() * 2 + 0.1).toFixed(2);
+          balance -= parseFloat(tokens);
+          balance = Math.max(0, balance);
+          
+          list.push({
+            id: String(idCounter++),
+            time: dateStr,
+            level: String(Math.floor(Math.random() * 3) + 1),
+            type: types[Math.floor(Math.random() * types.length)],
+            trans: '消费',
+            tokens: tokens,
+            balance: balance.toFixed(2)
+          });
+        }
+        
+        // 按时间倒序排列（最新的在前）
+        list.sort(function(a, b) {
+          return new Date(b.time) - new Date(a.time);
+        });
+        
+        // 重新分配编号：最新的记录编号为1，最旧的记录编号为总数
+        list.forEach(function(item, index) {
+          item.id = String(index + 1);
+        });
+        
+        return list;
+      }
+      
+      // 生成 mock 数据
+      var mockList = generateMockList();
+      
+      // 设置默认时间范围为今日
+      var today = new Date();
+      var todayStr = today.getFullYear() + '-' + 
+                    String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(today.getDate()).padStart(2, '0');
+      document.getElementById('list-start-date').value = todayStr;
+      document.getElementById('list-end-date').value = todayStr;
+      
+      // 余额与用量为演示数据，后续对接真实 API
+      var mockBalance = parseFloat(mockList[0] ? mockList[0].balance : 128.5);
+      document.getElementById('balance-display').innerHTML = mockBalance.toFixed(2) + ' <span>万 tokens</span>';
+      document.getElementById('stat-balance').innerHTML = mockBalance.toFixed(2) + ' <span>万 tokens</span>';
+      
+      // 计算统计：今日数据
+      var today = new Date();
+      var todayStr = today.getFullYear() + '-' + 
+                    String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(today.getDate()).padStart(2, '0');
+      var todayList = mockList.filter(function(row) {
+        return row.time.split(' ')[0] === todayStr;
+      });
+      var todayCalls = todayList.length || 0;
+      var todayTokens = todayList.reduce(function(sum, row) {
+        return sum + (row.trans === '消费' ? parseFloat(row.tokens) : 0);
+      }, 0);
+      
+      // 如果没有今天的数据，使用默认值
+      if (todayCalls === 0) {
+        todayCalls = 12;
+        todayTokens = 1.5;
+      }
+      
+      document.getElementById('stat-calls').textContent = todayCalls.toLocaleString();
+      document.getElementById('stat-tokens').innerHTML = todayTokens.toFixed(2) + ' <span>万</span>';
+
+      // Tab 切换
+      document.querySelectorAll('.portal-tab').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var tab = btn.dataset.tab;
+          document.querySelectorAll('.portal-tab').forEach(function(b) { b.classList.remove('active'); });
+          document.querySelectorAll('.portal-section').forEach(function(s) { s.classList.remove('active'); });
+          btn.classList.add('active');
+          document.getElementById(tab + '-section').classList.add('active');
+          
+          // 切换到用量概况时，确保图表已初始化
+          if (tab === 'overview' && !callsChart) {
+            setTimeout(function() {
+              initCharts();
+            }, 100);
+          }
+        });
+      });
+
+      // 时间范围切换
+      document.getElementById('time-range').addEventListener('change', function() {
+        document.getElementById('custom-range').style.display = this.value === 'custom' ? 'flex' : 'none';
+      });
+      var tbody = document.getElementById('usage-table-body');
+      var emptyState = document.getElementById('usage-empty-state');
+      var pageInfo = document.getElementById('page-info');
+      var currentPage = 1;
+      var pageSize = 10;
+      var filteredList = [];
+
+      function renderList(list, page) {
+        tbody.innerHTML = '';
+        if (list.length === 0) {
+          emptyState.style.display = 'block';
+          pageInfo.textContent = '第 0 页 / 共 0 条';
+          return;
+        }
+        emptyState.style.display = 'none';
+        var start = (page - 1) * pageSize;
+        var end = Math.min(start + pageSize, list.length);
+        var pageData = list.slice(start, end);
+        pageData.forEach(function(row) {
+          var tr = document.createElement('tr');
+          tr.innerHTML = '<td>' + row.id + '</td><td>' + row.time + '</td><td>' + row.trans + '</td><td>' + row.tokens + '</td><td>' + row.balance + '</td>';
+          tbody.appendChild(tr);
+        });
+        var totalPages = Math.ceil(list.length / pageSize);
+        pageInfo.textContent = '第 ' + page + ' 页 / 共 ' + list.length + ' 条';
+        document.getElementById('prev-page').disabled = page <= 1;
+        document.getElementById('next-page').disabled = page >= totalPages;
+      }
+
+      function filterList() {
+        var trans = document.getElementById('transaction-filter').value;
+        var startDate = document.getElementById('list-start-date').value;
+        var endDate = document.getElementById('list-end-date').value;
+
+        filteredList = mockList.filter(function(row) {
+          var transMap = { 'consume': '消费', 'recharge': '充入' };
+          if (trans !== 'all' && row.trans !== transMap[trans]) return false;
+          var rowDate = row.time.split(' ')[0];
+          if (startDate && rowDate < startDate) return false;
+          if (endDate && rowDate > endDate) return false;
+          return true;
+        });
+        currentPage = 1;
+        renderList(filteredList, currentPage);
+      }
+
+      // 初始化时应用今日筛选
+      filterList();
+
+      document.getElementById('prev-page').addEventListener('click', function() {
+        if (currentPage > 1) {
+          currentPage--;
+          renderList(filteredList, currentPage);
+        }
+      });
+
+      document.getElementById('next-page').addEventListener('click', function() {
+        var totalPages = Math.ceil(filteredList.length / pageSize);
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderList(filteredList, currentPage);
+        }
+      });
+
+      document.getElementById('usage-list-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        filterList();
+      });
+      document.getElementById('list-reset').addEventListener('click', function() {
+        // 重置为今日
+        var today = new Date();
+        var todayStr = today.getFullYear() + '-' + 
+                      String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                      String(today.getDate()).padStart(2, '0');
+        document.getElementById('list-start-date').value = todayStr;
+        document.getElementById('list-end-date').value = todayStr;
+        document.getElementById('transaction-filter').value = 'all';
+        filterList();
+      });
+
+      // 图表实例（提前声明，供 Tab 切换时使用）
+      var callsChart = null;
+      var tokensChart = null;
+
+      // 图表初始化
+      function initCharts() {
+        // 检查 Chart.js 是否加载
+        if (typeof Chart === 'undefined') {
+          console.error('Chart.js 未加载，请检查网络连接');
+          return;
+        }
+        
+        // 检查 canvas 元素是否存在
+        var callsCanvas = document.getElementById('calls-chart');
+        var tokensCanvas = document.getElementById('tokens-chart');
+        if (!callsCanvas || !tokensCanvas) {
+          console.warn('图表 canvas 元素未找到');
+          return;
+        }
+        // 销毁旧图表
+        if (callsChart) callsChart.destroy();
+        if (tokensChart) tokensChart.destroy();
+
+        // 根据选择的时间范围生成数据
+        var range = document.getElementById('time-range').value;
+        var days = range === 'today' ? 1 : range === 'week' ? 7 : range === 'month' ? 30 : 7;
+        
+        var labels = [];
+        var callsData = [];
+        var tokensData = [];
+        var today = new Date();
+        
+        for (var i = days - 1; i >= 0; i--) {
+          var d = new Date(today);
+          d.setDate(d.getDate() - i);
+          var month = String(d.getMonth() + 1).padStart(2, '0');
+          var day = String(d.getDate()).padStart(2, '0');
+          labels.push(month + '-' + day);
+          
+          // 生成更真实的趋势数据（有波动但整体稳定）
+          var baseCalls = 120;
+          var baseTokens = 1.2;
+          callsData.push(Math.floor(baseCalls + Math.sin(i * 0.5) * 30 + Math.random() * 40));
+          tokensData.push(parseFloat((baseTokens + Math.sin(i * 0.5) * 0.3 + Math.random() * 0.4).toFixed(2)));
+        }
+
+        // 调用次数趋势图（折线图）
+        var callsCtx = document.getElementById('calls-chart').getContext('2d');
+        callsChart = new Chart(callsCtx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: '调用次数',
+              data: callsData,
+              borderColor: '#3B82F6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              borderWidth: 2,
+              fill: true,
+              tension: 0.4,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 10,
+                titleFont: { size: 12 },
+                bodyFont: { size: 12 }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  font: { size: 11 }
+                },
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.05)'
+                }
+              },
+              x: {
+                ticks: {
+                  font: { size: 11 }
+                },
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
+        });
+
+        // Token 消耗趋势图（面积图）
+        var tokensCtx = document.getElementById('tokens-chart').getContext('2d');
+        tokensChart = new Chart(tokensCtx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Token 消耗（万）',
+              data: tokensData,
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.2)',
+              borderWidth: 2,
+              fill: true,
+              tension: 0.4,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                padding: 10,
+                titleFont: { size: 12 },
+                bodyFont: { size: 12 },
+                callbacks: {
+                  label: function(context) {
+                    return '消耗: ' + context.parsed.y + ' 万 tokens';
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  font: { size: 11 },
+                  callback: function(value) {
+                    return value + ' 万';
+                  }
+                },
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.05)'
+                }
+              },
+              x: {
+                ticks: {
+                  font: { size: 11 }
+                },
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // 时间范围变化时更新图表
+      var timeRangeSelect = document.getElementById('time-range');
+      timeRangeSelect.addEventListener('change', function() {
+        document.getElementById('custom-range').style.display = this.value === 'custom' ? 'flex' : 'none';
+        initCharts();
+      });
+
+      // 筛选按钮
+      document.getElementById('apply-filter').addEventListener('click', function() {
+        initCharts();
+      });
+
+      // 初始化图表 - 确保 Chart.js 和 DOM 都已加载
+      function tryInitCharts() {
+        if (typeof Chart !== 'undefined') {
+          var callsCanvas = document.getElementById('calls-chart');
+          var tokensCanvas = document.getElementById('tokens-chart');
+          if (callsCanvas && tokensCanvas) {
+            initCharts();
+            return true;
+          }
+        }
+        return false;
+      }
+      
+      // 尝试初始化图表
+      if (!tryInitCharts()) {
+        // 如果 Chart.js 未加载或 DOM 未就绪，等待后重试
+        var retryCount = 0;
+        var retryTimer = setInterval(function() {
+          retryCount++;
+          if (tryInitCharts() || retryCount > 20) {
+            clearInterval(retryTimer);
+            if (retryCount > 20) {
+              console.error('图表初始化失败：Chart.js 加载超时或 DOM 元素未找到');
+            }
+          }
+        }, 100);
+      }
+    })();
+  </script>
+</body>
+</html>
