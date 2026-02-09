@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="trafficStatistics.css">
   <link rel="stylesheet" href="header.css">
   <link rel="stylesheet" href="footer.css">
+  <script src="https://gcore.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body class="page-compact-footer">
   <div id="header-container"><div class="header-component">
@@ -42,6 +43,7 @@
     </nav>
     
     <div class="header-actions">
+      <a href="user/login.html" class="user-portal-link" target="_blank">用户登录</a>
       <div class="search-container">
         <input type="text" placeholder="搜索功能或用户..." class="search-input">
         <button class="search-button">
@@ -162,7 +164,7 @@
             </div>
           </div>
           <div class="chart-wrapper">
-            <img loading="lazy" src="https://placeholder.pics/svg/800x400/DEDEDE/555555/调用次数折线图" alt="流量趋势图表" class="chart-image">
+            <canvas id="calls-trend-chart"></canvas>
           </div>
         </div>
 
@@ -176,7 +178,7 @@
             </div>
           </div>
           <div class="chart-wrapper">
-            <img loading="lazy" src="https://placeholder.pics/svg/800x400/DEDEDE/555555/调用量折线图" alt="用户流量分布折线图" class="chart-image">
+            <canvas id="tokens-trend-chart"></canvas>
           </div>
         </div>
       </div>

@@ -26,19 +26,53 @@ document.addEventListener("DOMContentLoaded", function() {
   let roles = ["管理员", "教师", "学生"];
   let types = ["VIP", "普通", "试用"];
 
-  // 模拟用户数据
-  const mockUsers = [
-    { id: 1, username: "张老师", email: "zhang@example.com", phone: "13800138001", level: 5, role: "教师", type: "VIP", source: "后台", registerDate: "2023-01-15 10:30:25", status: "active" },
-    { id: 2, username: "李同学", email: "li@example.com", phone: "13800138002", level: 2, role: "学生", type: "普通", source: "系统", registerDate: "2023-02-20 14:15:30", status: "active" },
-    { id: 3, username: "王管理员", email: "wang@example.com", phone: "13800138003", level: 10, role: "管理员", type: "VIP", source: "后台", registerDate: "2023-03-10 09:20:15", status: "active" },
-    { id: 4, username: "赵同学", email: "zhao@example.com", phone: "13800138004", level: 1, role: "学生", type: "试用", source: "系统", registerDate: "2023-04-05 16:45:50", status: "disabled" },
-    { id: 5, username: "钱老师", email: "qian@example.com", phone: "13800138005", level: 7, role: "教师", type: "VIP", source: "后台", registerDate: "2023-05-12 11:30:40", status: "active" },
-    { id: 6, username: "孙访客", email: "sun@example.com", phone: "13800138006", level: 0, role: "学生", type: "试用", source: "系统", registerDate: "2023-06-18 13:25:10", status: "active" },
-    { id: 7, username: "周同学", email: "zhou@example.com", phone: "13800138007", level: 3, role: "学生", type: "普通", source: "系统", registerDate: "2023-07-22 08:15:20", status: "disabled" },
-    { id: 8, username: "吴老师", email: "wu@example.com", phone: "13800138008", level: 6, role: "教师", type: "VIP", source: "后台", registerDate: "2023-08-30 15:40:35", status: "active" },
-    { id: 9, username: "郑同学", email: "zheng@example.com", phone: "13800138009", level: 2, role: "学生", type: "普通", source: "系统", registerDate: "2023-09-15 12:50:45", status: "active" },
-    { id: 10, username: "冯管理员", email: "feng@example.com", phone: "13800138010", level: 9, role: "管理员", type: "VIP", source: "后台", registerDate: "2023-10-10 10:20:30", status: "active" }
-  ];
+  // 用户数据存储键
+  const USERS_STORAGE_KEY = 'users';
+  
+  // 加载用户数据（优先从localStorage，否则使用默认数据）
+  function loadUsers() {
+    try {
+      const stored = localStorage.getItem(USERS_STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.warn('加载用户数据失败:', e);
+    }
+    
+    // 默认用户数据（带balance字段）
+    const defaultUsers = [
+      { id: 1, username: "张老师", email: "zhang@example.com", phone: "13800138001", level: 5, role: "教师", type: "VIP", source: "后台", registerDate: "2023-01-15 10:30:25", status: "active", balance: 100.5 },
+      { id: 2, username: "李同学", email: "li@example.com", phone: "13800138002", level: 2, role: "学生", type: "普通", source: "系统", registerDate: "2023-02-20 14:15:30", status: "active", balance: 50.0 },
+      { id: 3, username: "王管理员", email: "wang@example.com", phone: "13800138003", level: 10, role: "管理员", type: "VIP", source: "后台", registerDate: "2023-03-10 09:20:15", status: "active", balance: 200.0 },
+      { id: 4, username: "赵同学", email: "zhao@example.com", phone: "13800138004", level: 1, role: "学生", type: "试用", source: "系统", registerDate: "2023-04-05 16:45:50", status: "disabled", balance: 10.0 },
+      { id: 5, username: "钱老师", email: "qian@example.com", phone: "13800138005", level: 7, role: "教师", type: "VIP", source: "后台", registerDate: "2023-05-12 11:30:40", status: "active", balance: 150.0 },
+      { id: 6, username: "孙访客", email: "sun@example.com", phone: "13800138006", level: 0, role: "学生", type: "试用", source: "系统", registerDate: "2023-06-18 13:25:10", status: "active", balance: 5.0 },
+      { id: 7, username: "周同学", email: "zhou@example.com", phone: "13800138007", level: 3, role: "学生", type: "普通", source: "系统", registerDate: "2023-07-22 08:15:20", status: "disabled", balance: 20.0 },
+      { id: 8, username: "吴老师", email: "wu@example.com", phone: "13800138008", level: 6, role: "教师", type: "VIP", source: "后台", registerDate: "2023-08-30 15:40:35", status: "active", balance: 120.0 },
+      { id: 9, username: "郑同学", email: "zheng@example.com", phone: "13800138009", level: 2, role: "学生", type: "普通", source: "系统", registerDate: "2023-09-15 12:50:45", status: "active", balance: 30.0 },
+      { id: 10, username: "冯管理员", email: "feng@example.com", phone: "13800138010", level: 9, role: "管理员", type: "VIP", source: "后台", registerDate: "2023-10-10 10:20:30", status: "active", balance: 250.0 }
+    ];
+    
+    // 保存默认数据到localStorage
+    saveUsers(defaultUsers);
+    return defaultUsers;
+  }
+  
+  // 保存用户数据到localStorage
+  function saveUsers(users) {
+    try {
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+    } catch (e) {
+      console.error('保存用户数据失败:', e);
+    }
+  }
+  
+  // 模拟用户数据（从localStorage加载）
+  let mockUsers = loadUsers();
 
   // 分页变量
   let currentPage = 1;
@@ -259,6 +293,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const userRole = document.getElementById("user-role").value;
     const userType = document.getElementById("user-type").value;
     const password = document.getElementById("password").value;
+    const balance = parseFloat(document.getElementById("add-user-balance").value) || 0;
     
     // 格式化当前时间（精确到时分秒）
     const now = new Date();
@@ -270,9 +305,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const seconds = String(now.getSeconds()).padStart(2, '0');
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     
+    // 生成新ID（确保唯一）
+    const maxId = mockUsers.length > 0 ? Math.max(...mockUsers.map(u => u.id)) : 0;
+    
     // 模拟添加用户
     const newUser = {
-      id: mockUsers.length + 1,
+      id: maxId + 1,
       username: username,
       email: email,
       phone: phone,
@@ -281,15 +319,18 @@ document.addEventListener("DOMContentLoaded", function() {
       type: userType,
       source: "后台",
       registerDate: formattedDate,
-      status: "active"
+      status: "active",
+      balance: balance
     };
     
     mockUsers.unshift(newUser);
+    saveUsers(mockUsers);
     filterUsers();
     
     // 重置表单并关闭模态框
     addUserForm.reset();
     document.getElementById("level").value = 0; // 重置级别为默认值
+    document.getElementById("add-user-balance").value = 0; // 重置余额
     addUserModal.classList.remove("show");
     
     // 显示成功消息
@@ -320,6 +361,7 @@ document.addEventListener("DOMContentLoaded", function() {
           const user = mockUsers.find(u => u.id === userId);
           if (user) user.role = this.value;
         });
+        saveUsers(mockUsers);
         filterUsers();
         selectedUserIds.clear();
         updateBatchOperations();
@@ -335,6 +377,7 @@ document.addEventListener("DOMContentLoaded", function() {
           const user = mockUsers.find(u => u.id === userId);
           if (user) user.type = this.value;
         });
+        saveUsers(mockUsers);
         filterUsers();
         selectedUserIds.clear();
         updateBatchOperations();
@@ -350,6 +393,7 @@ document.addEventListener("DOMContentLoaded", function() {
           const user = mockUsers.find(u => u.id === userId);
           if (user) user.status = "active";
         });
+        saveUsers(mockUsers);
         filterUsers();
         selectedUserIds.clear();
         updateBatchOperations();
@@ -364,6 +408,7 @@ document.addEventListener("DOMContentLoaded", function() {
           const user = mockUsers.find(u => u.id === userId);
           if (user) user.status = "disabled";
         });
+        saveUsers(mockUsers);
         filterUsers();
         selectedUserIds.clear();
         updateBatchOperations();
@@ -380,6 +425,7 @@ document.addEventListener("DOMContentLoaded", function() {
             mockUsers.splice(index, 1);
           }
         });
+        saveUsers(mockUsers);
         selectedUserIds.clear();
         filterUsers();
         updateBatchOperations();
@@ -497,15 +543,114 @@ document.addEventListener("DOMContentLoaded", function() {
   updatePublicFieldsSelects();
   renderUsers();
 
-  // 全局函数
+  // 编辑用户模态框元素
+  const editUserModal = document.getElementById("edit-user-modal");
+  const closeEditModalBtn = document.getElementById("close-edit-modal");
+  const editUserForm = document.getElementById("edit-user-form");
+
+  // 编辑用户模态框控制
+  if (closeEditModalBtn) {
+    closeEditModalBtn.addEventListener("click", () => {
+      editUserModal.classList.remove("show");
+    });
+  }
+
+  // 点击模态框外部关闭
+  if (editUserModal) {
+    window.addEventListener("click", (e) => {
+      if (e.target === editUserModal) {
+        editUserModal.classList.remove("show");
+      }
+    });
+  }
+
+  // 编辑用户表单提交
+  if (editUserForm) {
+    editUserForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      
+      const userId = parseInt(document.getElementById("edit-user-id").value);
+      const user = mockUsers.find(u => u.id === userId);
+      if (!user) {
+        alert("用户不存在！");
+        return;
+      }
+      
+      const username = document.getElementById("edit-username").value;
+      const email = document.getElementById("edit-email").value;
+      const phone = document.getElementById("edit-phone").value;
+      const level = parseInt(document.getElementById("edit-level").value) || 0;
+      const userRole = document.getElementById("edit-user-role").value;
+      const userType = document.getElementById("edit-user-type").value;
+      const balance = parseFloat(document.getElementById("edit-user-balance").value) || 0;
+      
+      // 更新用户信息
+      user.username = username;
+      user.email = email;
+      user.phone = phone;
+      user.level = level;
+      user.role = userRole;
+      user.type = userType;
+      user.balance = balance;
+      
+      saveUsers(mockUsers);
+      filterUsers();
+      
+      // 关闭模态框
+      editUserModal.classList.remove("show");
+      
+      // 显示成功消息
+      alert(`用户 ${username} 的信息已更新！`);
+    });
+  }
+
+  // 全局函数 - 编辑用户
   window.editUser = function(id) {
     const user = mockUsers.find(u => u.id === id);
-    alert(`正在编辑用户: ${user.username}\nID: ${user.id}\n邮箱: ${user.email}`);
+    if (!user) {
+      alert("用户不存在！");
+      return;
+    }
+    
+    // 填充表单
+    document.getElementById("edit-user-id").value = user.id;
+    document.getElementById("edit-username").value = user.username || '';
+    document.getElementById("edit-email").value = user.email || '';
+    document.getElementById("edit-phone").value = user.phone || '';
+    document.getElementById("edit-level").value = user.level || 0;
+    document.getElementById("edit-user-role").value = user.role || '';
+    document.getElementById("edit-user-type").value = user.type || '';
+    document.getElementById("edit-user-balance").value = user.balance || 0;
+    
+    // 填充角色和类型下拉框（如果还没有填充）
+    const editRoleSelect = document.getElementById("edit-user-role");
+    const editTypeSelect = document.getElementById("edit-user-type");
+    if (editRoleSelect && editRoleSelect.options.length <= 1) {
+      roles.forEach(role => {
+        const option = document.createElement("option");
+        option.value = role;
+        option.textContent = role;
+        editRoleSelect.appendChild(option);
+      });
+    }
+    if (editTypeSelect && editTypeSelect.options.length <= 1) {
+      types.forEach(type => {
+        const option = document.createElement("option");
+        option.value = type;
+        option.textContent = type;
+        editTypeSelect.appendChild(option);
+      });
+    }
+    
+    // 打开模态框
+    editUserModal.classList.add("show");
   };
 
   window.toggleUserStatus = function(id, action) {
     const user = mockUsers.find(u => u.id === id);
+    if (!user) return;
     user.status = action === "disable" ? "disabled" : "active";
+    saveUsers(mockUsers);
     filterUsers();
     alert(`用户 ${user.username} 已${action === "disable" ? "禁用" : "启用"}`);
   };
@@ -517,6 +662,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const username = mockUsers[index].username;
         mockUsers.splice(index, 1);
         selectedUserIds.delete(id);
+        saveUsers(mockUsers);
         filterUsers();
         updateBatchOperations();
         alert(`用户 ${username} 已删除`);

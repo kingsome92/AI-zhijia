@@ -33,6 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
     dbPass: document.getElementById('dbPass'),
     dbSchemaHint: document.getElementById('dbSchemaHint'),
 
+    editWhitelistUserSearch: document.getElementById('editWhitelistUserSearch'),
+    editAddWhitelistUserBtn: document.getElementById('editAddWhitelistUserBtn'),
+    editWhitelistTableBody: document.getElementById('editWhitelistTableBody'),
+    editWhitelistEmpty: document.getElementById('editWhitelistEmpty'),
+    editAddUserSearch: document.getElementById('editAddUserSearch'),
+    editAddUserTableBody: document.getElementById('editAddUserTableBody'),
+    editAddUserEmpty: document.getElementById('editAddUserEmpty'),
+
     statusText: document.getElementById('statusText'),
     appKeyText: document.getElementById('appKeyText'),
     updatedAtText: document.getElementById('updatedAtText'),
@@ -47,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
   hydrateSelectors();
   hydrateForm();
   renderMeta();
+  initWhitelist();
 
   function getAppOrFallback() {
     const apps = loadApps();
@@ -95,7 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fieldDictionary: Array.isArray(raw.db?.fieldDictionary) ? raw.db.fieldDictionary : []
       },
       appKey: raw.appKey || null,
-      publishedAt: raw.publishedAt || null
+      publishedAt: raw.publishedAt || null,
+      whitelist: Array.isArray(raw.whitelist) ? raw.whitelist : []
     };
   }
 
@@ -219,6 +229,21 @@ document.addEventListener('DOMContentLoaded', () => {
     initVariableModalEvents();
     // 字段字典模态框事件
     initFieldDictModalEvents();
+
+    // 白名单管理事件
+    if (els.editAddWhitelistUserBtn) {
+      els.editAddWhitelistUserBtn.addEventListener('click', () => {
+        const modal = document.getElementById('editAddWhitelistUserModal');
+        if (modal) openModal(modal);
+        filterEditAvailableUsers();
+      });
+    }
+    if (els.editWhitelistUserSearch) {
+      els.editWhitelistUserSearch.addEventListener('input', filterEditWhitelistUsers);
+    }
+    if (els.editAddUserSearch) {
+      els.editAddUserSearch.addEventListener('input', filterEditAvailableUsers);
+    }
   }
 
   function validateRequired() {
@@ -1432,5 +1457,143 @@ document.addEventListener('DOMContentLoaded', () => {
       hideVariableSuggestions();
     }
   });
+
+  // 白名单管理功能
+  function loadUsers() {
+    try {
+      const raw = localStorage.getItem('users');
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function initWhitelist() {
+    if (!app.whitelist) {
+      app.whitelist = [];
+      updateApp({ whitelist: [] });
+    }
+    renderEditWhitelistUsers();
+  }
+
+  function renderEditWhitelistUsers() {
+    if (!els.editWhitelistTableBody) return;
+    
+    const keyword = els.editWhitelistUserSearch ? els.editWhitelistUserSearch.value.trim().toLowerCase() : '';
+    const allUsers = loadUsers();
+    let filteredUsers = (app.whitelist || []).map(userId => {
+      // 确保ID类型一致
+      return allUsers.find(u => String(u.id) === String(userId) || u.id === userId);
+    }).filter(Boolean);
+
+    if (keyword) {
+      filteredUsers = filteredUsers.filter(user => {
+        const searchText = `${user.username || ''} ${user.email || ''} ${user.phone || ''}`.toLowerCase();
+        return searchText.includes(keyword);
+      });
+    }
+
+    if (filteredUsers.length === 0) {
+      els.editWhitelistTableBody.innerHTML = '';
+      if (els.editWhitelistEmpty) els.editWhitelistEmpty.style.display = 'block';
+      return;
+    }
+
+    if (els.editWhitelistEmpty) els.editWhitelistEmpty.style.display = 'none';
+    els.editWhitelistTableBody.innerHTML = filteredUsers.map(user => `
+      <tr>
+        <td style="padding: 12px;">${escapeHtml(user.username || '-')}</td>
+        <td style="padding: 12px;">${escapeHtml(user.email || '-')}</td>
+        <td style="padding: 12px;">${escapeHtml(user.phone || '-')}</td>
+        <td style="padding: 12px; text-align: center;">
+          <button type="button" class="btn btn-link btn-link-danger btn-sm" onclick="window.removeFromEditWhitelist('${escapeAttr(user.id)}')">
+            <i class="bi bi-x-circle"></i> 移除
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function filterEditWhitelistUsers() {
+    renderEditWhitelistUsers();
+  }
+
+  function filterEditAvailableUsers() {
+    if (!els.editAddUserTableBody) return;
+    
+    const keyword = els.editAddUserSearch ? els.editAddUserSearch.value.trim().toLowerCase() : '';
+    const whitelistIds = app.whitelist || [];
+    const allUsers = loadUsers();
+    
+    let availableUsers = allUsers.filter(user => {
+      // 确保ID类型一致进行比较
+      return !whitelistIds.some(id => String(id) === String(user.id) || id === user.id);
+    });
+    
+    if (keyword) {
+      availableUsers = availableUsers.filter(user => {
+        const searchText = `${user.username || ''} ${user.email || ''} ${user.phone || ''}`.toLowerCase();
+        return searchText.includes(keyword);
+      });
+    }
+
+    if (availableUsers.length === 0) {
+      els.editAddUserTableBody.innerHTML = '';
+      if (els.editAddUserEmpty) els.editAddUserEmpty.style.display = 'block';
+      return;
+    }
+
+    if (els.editAddUserEmpty) els.editAddUserEmpty.style.display = 'none';
+    els.editAddUserTableBody.innerHTML = availableUsers.map(user => `
+      <tr>
+        <td style="padding: 10px;">${escapeHtml(user.username || '-')}</td>
+        <td style="padding: 10px;">${escapeHtml(user.email || '-')}</td>
+        <td style="padding: 10px;">${escapeHtml(user.phone || '-')}</td>
+        <td style="padding: 10px; text-align: center;">
+          <button type="button" class="btn btn-link btn-sm" onclick="window.addToEditWhitelist('${escapeAttr(user.id)}')">
+            <i class="bi bi-plus-circle"></i> 添加
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function removeFromEditWhitelist(userId) {
+    if (!app.whitelist) app.whitelist = [];
+    const userIdNum = typeof userId === 'string' ? parseInt(userId) : userId;
+    app.whitelist = app.whitelist.filter(id => String(id) !== String(userIdNum) && id !== userIdNum);
+    updateApp({ whitelist: app.whitelist, updatedAt: new Date().toISOString() });
+    renderEditWhitelistUsers();
+    filterEditAvailableUsers();
+  }
+
+  function addToEditWhitelist(userId) {
+    if (!app.whitelist) app.whitelist = [];
+    const userIdNum = typeof userId === 'string' ? parseInt(userId) : userId;
+    const exists = app.whitelist.some(id => String(id) === String(userIdNum) || id === userIdNum);
+    if (!exists) {
+      app.whitelist.push(userIdNum);
+      updateApp({ whitelist: app.whitelist, updatedAt: new Date().toISOString() });
+    }
+    const modal = document.getElementById('editAddWhitelistUserModal');
+    if (modal) closeModal(modal);
+    if (els.editAddUserSearch) els.editAddUserSearch.value = '';
+    renderEditWhitelistUsers();
+    filterEditAvailableUsers();
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function escapeAttr(text) {
+    return String(text).replace(/"/g, '&quot;');
+  }
+
+  window.removeFromEditWhitelist = removeFromEditWhitelist;
+  window.addToEditWhitelist = addToEditWhitelist;
 });
 

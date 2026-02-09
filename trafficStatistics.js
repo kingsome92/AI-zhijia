@@ -39,6 +39,15 @@ document.addEventListener("DOMContentLoaded", function() {
       sec.classList.toggle('active', sec.id === targetId);
     });
 
+    // 切换到用量概况时，确保图表已初始化
+    if (targetId === 'overview-section' && typeof Chart !== 'undefined') {
+      setTimeout(() => {
+        if (!callsChart || !tokensChart) {
+          initCharts();
+        }
+      }, 100);
+    }
+
     if (!options.skipHashUpdate) {
       history.replaceState(null, '', `#${targetId}`);
     }
@@ -68,7 +77,301 @@ document.addEventListener("DOMContentLoaded", function() {
   
   timeRangeSelect.addEventListener('change', function() {
     customRangeGroup.style.display = this.value === 'custom' ? 'flex' : 'none';
+    // 时间范围改变时更新图表
+    if (typeof Chart !== 'undefined') {
+      setTimeout(() => initCharts(), 100);
+    }
   });
+
+  // 图表实例
+  let callsChart = null;
+  let tokensChart = null;
+
+  // 更新统计卡片
+  function updateStatsCards(callsData, tokensData) {
+    const totalCalls = callsData.reduce((sum, val) => sum + val, 0);
+    const totalTokens = tokensData.reduce((sum, val) => sum + val, 0);
+    
+    const callsValueEl = document.querySelector('.stat-card .stat-value');
+    const tokensValueEl = document.querySelectorAll('.stat-card .stat-value')[1];
+    
+    if (callsValueEl) {
+      callsValueEl.innerHTML = totalCalls.toLocaleString() + ' <span></span>';
+    }
+    if (tokensValueEl) {
+      tokensValueEl.innerHTML = totalTokens.toFixed(2) + ' <span>百万tokens</span>';
+    }
+  }
+
+  // 生成模拟数据
+  function generateChartData(timeRange) {
+    const today = new Date();
+    let labels = [];
+    let callsData = [];
+    let tokensData = [];
+    let days = 7;
+
+    if (timeRange === 'today') {
+      days = 1;
+      // 今日按小时 - 模拟一天的使用模式（上午低，下午高，晚上中等）
+      for (let i = 23; i >= 0; i--) {
+        const d = new Date(today);
+        d.setHours(d.getHours() - i);
+        const hour = d.getHours();
+        labels.push(String(hour).padStart(2, '0') + ':00');
+        
+        // 模拟一天的使用曲线：早上低，中午开始上升，下午高峰，晚上下降
+        const hourFactor = hour < 6 ? 0.3 : hour < 9 ? 0.5 : hour < 12 ? 0.7 : hour < 18 ? 1.2 : hour < 22 ? 0.9 : 0.6;
+        const baseCalls = 300;
+        const variance = Math.random() * 200 - 100;
+        callsData.push(Math.max(50, Math.floor(baseCalls * hourFactor + variance)));
+        
+        const baseTokens = 0.4;
+        tokensData.push(parseFloat(Math.max(0.1, (baseTokens * hourFactor + (Math.random() * 0.2 - 0.1)).toFixed(2))));
+      }
+    } else if (timeRange === 'week') {
+      days = 7;
+      // 一周数据 - 工作日高，周末稍低
+      for (let i = days - 1; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const dayOfWeek = d.getDay();
+        labels.push(month + '-' + day);
+        
+        // 工作日（1-5）较高，周末（0,6）较低
+        const weekdayFactor = (dayOfWeek >= 1 && dayOfWeek <= 5) ? 1.0 : 0.7;
+        const trend = 1 + (days - 1 - i) * 0.05; // 轻微上升趋势
+        const baseCalls = 10000;
+        callsData.push(Math.floor(baseCalls * weekdayFactor * trend + Math.random() * 3000 - 1500));
+        
+        const baseTokens = 3.0;
+        tokensData.push(parseFloat((baseTokens * weekdayFactor * trend + Math.random() * 1.0 - 0.5).toFixed(2)));
+      }
+    } else if (timeRange === 'month') {
+      days = 30;
+      // 一个月数据 - 有周期性波动和整体上升趋势
+      for (let i = days - 1; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        labels.push(month + '-' + day);
+        
+        // 周期性波动（每周） + 上升趋势
+        const weekCycle = Math.sin((days - 1 - i) * 2 * Math.PI / 7) * 0.3;
+        const trend = 1 + (days - 1 - i) * 0.02;
+        const baseCalls = 18000;
+        callsData.push(Math.floor(baseCalls * (1 + weekCycle) * trend + Math.random() * 4000 - 2000));
+        
+        const baseTokens = 5.5;
+        tokensData.push(parseFloat((baseTokens * (1 + weekCycle) * trend + Math.random() * 2.0 - 1.0).toFixed(2)));
+      }
+    } else if (timeRange === 'quarter') {
+      days = 90;
+      // 按周显示 - 季度数据，有明显增长趋势
+      for (let i = 12; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i * 7);
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        labels.push(month + '-' + day);
+        
+        // 季度增长趋势
+        const trend = 1 + (12 - i) * 0.08;
+        const cycle = Math.sin(i * 0.5) * 0.2;
+        const baseCalls = 45000;
+        callsData.push(Math.floor(baseCalls * (1 + cycle) * trend + Math.random() * 8000 - 4000));
+        
+        const baseTokens = 18;
+        tokensData.push(parseFloat((baseTokens * (1 + cycle) * trend + Math.random() * 4 - 2).toFixed(2)));
+      }
+    } else if (timeRange === 'year') {
+      days = 365;
+      // 按月显示 - 年度数据，有季节性波动
+      for (let i = 11; i >= 0; i--) {
+        const d = new Date(today);
+        d.setMonth(d.getMonth() - i);
+        labels.push(String(d.getMonth() + 1) + '月');
+        
+        // 季节性波动（模拟业务增长和季节性）
+        const seasonal = Math.sin(i * Math.PI / 6) * 0.25; // 季节性波动
+        const trend = 1 + (11 - i) * 0.12; // 年度增长趋势
+        const baseCalls = 180000;
+        callsData.push(Math.floor(baseCalls * (1 + seasonal) * trend + Math.random() * 30000 - 15000));
+        
+        const baseTokens = 60;
+        tokensData.push(parseFloat((baseTokens * (1 + seasonal) * trend + Math.random() * 12 - 6).toFixed(2)));
+      }
+    } else {
+      // custom 或其他情况，默认7天
+      days = 7;
+      for (let i = days - 1; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        labels.push(month + '-' + day);
+        
+        const weekdayFactor = (d.getDay() >= 1 && d.getDay() <= 5) ? 1.0 : 0.7;
+        const baseCalls = 10000;
+        callsData.push(Math.floor(baseCalls * weekdayFactor + Math.random() * 3000 - 1500));
+        
+        const baseTokens = 3.0;
+        tokensData.push(parseFloat((baseTokens * weekdayFactor + Math.random() * 1.0 - 0.5).toFixed(2)));
+      }
+    }
+
+    return { labels, callsData, tokensData };
+  }
+
+  // 初始化图表
+  function initCharts() {
+    const timeRange = timeRangeSelect.value;
+    const { labels, callsData, tokensData } = generateChartData(timeRange);
+    
+    // 更新统计卡片
+    updateStatsCards(callsData, tokensData);
+
+    // 销毁旧图表
+    if (callsChart) callsChart.destroy();
+    if (tokensChart) tokensChart.destroy();
+
+    // 调用次数趋势图
+    const callsCtx = document.getElementById('calls-trend-chart');
+    if (callsCtx) {
+      callsChart = new Chart(callsCtx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '调用次数',
+            data: callsData,
+            borderColor: '#3a86ff',
+            backgroundColor: 'rgba(58, 134, 255, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#3a86ff',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              titleFont: { size: 13, weight: 'bold' },
+              bodyFont: { size: 12 },
+              callbacks: {
+                label: function(context) {
+                  return '调用次数: ' + context.parsed.y.toLocaleString();
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                font: { size: 11 },
+                callback: function(value) {
+                  return value.toLocaleString();
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              }
+            },
+            x: {
+              ticks: {
+                font: { size: 11 }
+              },
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // 调用量趋势图
+    const tokensCtx = document.getElementById('tokens-trend-chart');
+    if (tokensCtx) {
+      tokensChart = new Chart(tokensCtx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '调用量（百万tokens）',
+            data: tokensData,
+            borderColor: '#28a745',
+            backgroundColor: 'rgba(40, 167, 69, 0.15)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#28a745',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              padding: 12,
+              titleFont: { size: 13, weight: 'bold' },
+              bodyFont: { size: 12 },
+              callbacks: {
+                label: function(context) {
+                  return '调用量: ' + context.parsed.y + ' 百万tokens';
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                font: { size: 11 },
+                callback: function(value) {
+                  return value + ' 百万';
+                }
+              },
+              grid: {
+                color: 'rgba(0, 0, 0, 0.05)'
+              }
+            },
+            x: {
+              ticks: {
+                font: { size: 11 }
+              },
+              grid: {
+                display: false
+              }
+            }
+          }
+        }
+      });
+    }
+  }
 
   document.getElementById('apply-filter').addEventListener('click', function() {
     const timeRange = timeRangeSelect.value;
@@ -87,11 +390,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     this.innerHTML = '<i class="bi bi-funnel-fill"></i> 筛选中...';
     this.disabled = true;
+    
+    // 更新图表
     setTimeout(() => {
+      initCharts();
       this.innerHTML = '<i class="bi bi-funnel"></i> 应用筛选';
       this.disabled = false;
-      alert('筛选条件已应用');
-    }, 800);
+    }, 300);
   });
 
   document.getElementById('reset-filter').addEventListener('click', function() {
@@ -104,11 +409,27 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // 图表操作
   document.getElementById('download-chart').addEventListener('click', function() {
-    alert('调用次数趋势图表已开始下载');
+    if (callsChart) {
+      const url = callsChart.toBase64Image();
+      const link = document.createElement('a');
+      link.download = '调用次数趋势图.png';
+      link.href = url;
+      link.click();
+    } else {
+      alert('图表未加载，请稍候再试');
+    }
   });
 
   document.getElementById('download-pie-chart').addEventListener('click', function() {
-    alert('调用量趋势图表已开始下载');
+    if (tokensChart) {
+      const url = tokensChart.toBase64Image();
+      const link = document.createElement('a');
+      link.download = '调用量趋势图.png';
+      link.href = url;
+      link.click();
+    } else {
+      alert('图表未加载，请稍候再试');
+    }
   });
 
   // 用量清单查询
@@ -253,4 +574,24 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   renderUsageTable();
+
+  // 初始化图表
+  if (typeof Chart !== 'undefined') {
+    setTimeout(() => {
+      initCharts();
+    }, 300);
+  } else {
+    // 如果 Chart.js 未加载，等待后重试
+    let retryCount = 0;
+    const retryTimer = setInterval(() => {
+      retryCount++;
+      if (typeof Chart !== 'undefined') {
+        clearInterval(retryTimer);
+        initCharts();
+      } else if (retryCount > 20) {
+        clearInterval(retryTimer);
+        console.error('Chart.js 加载失败');
+      }
+    }, 100);
+  }
 });

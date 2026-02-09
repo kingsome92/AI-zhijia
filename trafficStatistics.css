@@ -332,6 +332,15 @@ body {
 
 .chart-wrapper {
   padding: 1.5rem;
+  position: relative;
+  min-height: 400px;
+  height: 400px;
+}
+
+.chart-wrapper canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 400px;
 }
 
 .chart-image {

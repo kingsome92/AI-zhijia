@@ -10,9 +10,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const appTableBody = document.getElementById('appTableBody');
   const emptyState = document.getElementById('emptyState');
   const deleteAppName = document.getElementById('deleteAppName');
+  const whitelistModal = document.getElementById('whitelistModal');
+  const addWhitelistUserModal = document.getElementById('addWhitelistUserModal');
+  const whitelistAppName = document.getElementById('whitelistAppName');
+  const whitelistUserSearch = document.getElementById('whitelistUserSearch');
+  const addUserSearch = document.getElementById('addUserSearch');
+  const whitelistTableBody = document.getElementById('whitelistTableBody');
+  const addUserTableBody = document.getElementById('addUserTableBody');
+  const addWhitelistUserBtn = document.getElementById('addWhitelistUserBtn');
+  const whitelistEmpty = document.getElementById('whitelistEmpty');
+  const addUserEmpty = document.getElementById('addUserEmpty');
 
   let apps = loadApps();
   let appToDeleteId = null;
+  let currentWhitelistAppId = null;
 
   bindEvents();
   renderTable();
@@ -36,6 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
     confirmCreateApp.addEventListener('click', handleCreateApp);
     confirmDeleteApp.addEventListener('click', handleDeleteApp);
     appSearch.addEventListener('input', render);
+    addWhitelistUserBtn.addEventListener('click', () => openModal(addWhitelistUserModal));
+    whitelistUserSearch.addEventListener('input', filterWhitelistUsers);
+    addUserSearch.addEventListener('input', filterAvailableUsers);
 
     document.addEventListener('click', (e) => {
       const closeBtn = e.target.closest('[data-close]');
@@ -69,6 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       if (action === 'toggle') {
         toggleStatus(id);
+      }
+      if (action === 'whitelist') {
+        openWhitelistModal(id);
       }
     });
 
@@ -148,7 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
         schemaHint: ''
       },
       appKey: null,
-      publishedAt: null
+      publishedAt: null,
+      whitelist: []
     };
 
     apps.unshift(app);
@@ -250,6 +268,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button type="button" class="btn btn-link" data-action="edit" data-id="${escapeAttr(app.id)}">
                   <i class="bi bi-pencil"></i> 编辑
                 </button>
+                <button type="button" class="btn btn-link" data-action="whitelist" data-id="${escapeAttr(app.id)}">
+                  <i class="bi bi-people"></i> 白名单
+                </button>
                 <button type="button" class="btn btn-link" data-action="toggle" data-id="${escapeAttr(app.id)}">
                   <i class="bi ${isPublished ? 'bi-arrow-counterclockwise' : 'bi-upload'}"></i>
                   ${isPublished ? '回到草稿' : '快速发布'}
@@ -264,5 +285,161 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .join('');
   }
+
+  function loadUsers() {
+    try {
+      const raw = localStorage.getItem('users');
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function openWhitelistModal(appId) {
+    const app = apps.find(a => a.id === appId);
+    if (!app) return;
+    
+    currentWhitelistAppId = appId;
+    if (!app.whitelist) {
+      app.whitelist = [];
+      saveApps();
+    }
+    
+    whitelistAppName.textContent = app.name || '-';
+    openModal(whitelistModal);
+    renderWhitelistUsers();
+  }
+
+  function renderWhitelistUsers() {
+    const app = apps.find(a => a.id === currentWhitelistAppId);
+    if (!app || !app.whitelist) {
+      whitelistTableBody.innerHTML = '';
+      whitelistEmpty.style.display = 'block';
+      return;
+    }
+
+    const keyword = whitelistUserSearch.value.trim().toLowerCase();
+    const allUsers = loadUsers();
+    let filteredUsers = app.whitelist.map(userId => {
+      // 确保ID类型一致（都转为数字或字符串进行比较）
+      return allUsers.find(u => String(u.id) === String(userId) || u.id === userId);
+    }).filter(Boolean);
+
+    if (keyword) {
+      filteredUsers = filteredUsers.filter(user => {
+        const searchText = `${user.username || ''} ${user.email || ''} ${user.phone || ''}`.toLowerCase();
+        return searchText.includes(keyword);
+      });
+    }
+
+    if (filteredUsers.length === 0) {
+      whitelistTableBody.innerHTML = '';
+      whitelistEmpty.style.display = 'block';
+      return;
+    }
+
+    whitelistEmpty.style.display = 'none';
+    whitelistTableBody.innerHTML = filteredUsers.map(user => `
+      <tr>
+        <td style="padding: 12px;">${escapeHtml(user.username || '-')}</td>
+        <td style="padding: 12px;">${escapeHtml(user.email || '-')}</td>
+        <td style="padding: 12px;">${escapeHtml(user.phone || '-')}</td>
+        <td style="padding: 12px; text-align: center;">
+          <button type="button" class="btn btn-link btn-link-danger btn-sm" onclick="removeFromWhitelist('${escapeAttr(user.id)}')">
+            <i class="bi bi-x-circle"></i> 移除
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function filterWhitelistUsers() {
+    renderWhitelistUsers();
+  }
+
+  function removeFromWhitelist(userId) {
+    const app = apps.find(a => a.id === currentWhitelistAppId);
+    if (!app || !app.whitelist) return;
+    
+    // 确保ID类型一致进行比较
+    const userIdNum = typeof userId === 'string' ? parseInt(userId) : userId;
+    app.whitelist = app.whitelist.filter(id => String(id) !== String(userIdNum) && id !== userIdNum);
+    app.updatedAt = nowISO();
+    saveApps();
+    renderWhitelistUsers();
+  }
+
+  function filterAvailableUsers() {
+    const keyword = addUserSearch.value.trim().toLowerCase();
+    const app = apps.find(a => a.id === currentWhitelistAppId);
+    const whitelistIds = app && app.whitelist ? app.whitelist : [];
+    const allUsers = loadUsers();
+    
+    let availableUsers = allUsers.filter(user => {
+      // 确保ID类型一致进行比较
+      return !whitelistIds.some(id => String(id) === String(user.id) || id === user.id);
+    });
+    
+    if (keyword) {
+      availableUsers = availableUsers.filter(user => {
+        const searchText = `${user.username || ''} ${user.email || ''} ${user.phone || ''}`.toLowerCase();
+        return searchText.includes(keyword);
+      });
+    }
+
+    if (availableUsers.length === 0) {
+      addUserTableBody.innerHTML = '';
+      addUserEmpty.style.display = 'block';
+      return;
+    }
+
+    addUserEmpty.style.display = 'none';
+    addUserTableBody.innerHTML = availableUsers.map(user => `
+      <tr>
+        <td style="padding: 10px;">${escapeHtml(user.username || '-')}</td>
+        <td style="padding: 10px;">${escapeHtml(user.email || '-')}</td>
+        <td style="padding: 10px;">${escapeHtml(user.phone || '-')}</td>
+        <td style="padding: 10px; text-align: center;">
+          <button type="button" class="btn btn-link btn-sm" onclick="addToWhitelist('${escapeAttr(user.id)}')">
+            <i class="bi bi-plus-circle"></i> 添加
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function addToWhitelist(userId) {
+    const app = apps.find(a => a.id === currentWhitelistAppId);
+    if (!app) return;
+    
+    if (!app.whitelist) {
+      app.whitelist = [];
+    }
+    
+    // 确保ID类型一致，统一转为数字
+    const userIdNum = typeof userId === 'string' ? parseInt(userId) : userId;
+    const exists = app.whitelist.some(id => String(id) === String(userIdNum) || id === userIdNum);
+    
+    if (!exists) {
+      app.whitelist.push(userIdNum);
+      app.updatedAt = nowISO();
+      saveApps();
+    }
+    
+    closeModal(addWhitelistUserModal);
+    addUserSearch.value = '';
+    renderWhitelistUsers();
+    filterAvailableUsers();
+  }
+
+  window.removeFromWhitelist = removeFromWhitelist;
+  window.addToWhitelist = addToWhitelist;
+
+  // 监听添加用户模态框打开事件
+  addWhitelistUserBtn.addEventListener('click', () => {
+    addUserSearch.value = '';
+    setTimeout(() => filterAvailableUsers(), 100);
+  });
 });
 

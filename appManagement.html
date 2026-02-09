@@ -49,6 +49,7 @@
     </nav>
     
     <div class="header-actions">
+      <a href="user/login.html" class="user-portal-link" target="_blank">用户登录</a>
       <div class="search-container">
         <input type="text" placeholder="搜索功能或用户..." class="search-input">
         <button class="search-button">
@@ -244,6 +245,98 @@
           <button type="button" class="btn btn-danger" id="confirmDeleteApp">
             <i class="bi bi-trash"></i> 确认删除
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 白名单管理模态框 -->
+  <div class="modal" id="whitelistModal" aria-hidden="true">
+    <div class="modal-mask"></div>
+    <div class="modal-wrap">
+      <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+          <h3><i class="bi bi-people"></i> 白名单用户管理</h3>
+          <button type="button" class="modal-close" data-close="whitelistModal" aria-label="关闭">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="text-secondary" style="margin-bottom: 16px;">应用：<strong id="whitelistAppName"></strong></p>
+          
+          <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+            <div style="flex: 1;">
+              <input type="text" id="whitelistUserSearch" class="form-control" placeholder="搜索用户（用户名、邮箱、手机号）">
+            </div>
+            <button type="button" class="btn btn-primary" id="addWhitelistUserBtn">
+              <i class="bi bi-plus-circle"></i> 添加用户
+            </button>
+          </div>
+
+          <div style="border: 1px solid #e3e8f4; border-radius: 8px; max-height: 400px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead style="background: #f8fafc; position: sticky; top: 0;">
+                <tr>
+                  <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 0.9rem;">用户名</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 0.9rem;">邮箱</th>
+                  <th style="padding: 12px; text-align: left; font-weight: 600; font-size: 0.9rem;">手机号</th>
+                  <th style="padding: 12px; text-align: center; font-weight: 600; font-size: 0.9rem; width: 100px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="whitelistTableBody">
+                <!-- 白名单用户列表 -->
+              </tbody>
+            </table>
+            <div id="whitelistEmpty" style="padding: 40px; text-align: center; color: #64748b; display: none;">
+              <i class="bi bi-inbox" style="font-size: 2rem; display: block; margin-bottom: 8px; opacity: 0.5;"></i>
+              <p>暂无白名单用户</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-close="whitelistModal">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加用户到白名单模态框 -->
+  <div class="modal" id="addWhitelistUserModal" aria-hidden="true">
+    <div class="modal-mask"></div>
+    <div class="modal-wrap">
+      <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+          <h3><i class="bi bi-person-plus"></i> 添加用户到白名单</h3>
+          <button type="button" class="modal-close" data-close="addWhitelistUserModal" aria-label="关闭">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div style="margin-bottom: 16px;">
+            <input type="text" id="addUserSearch" class="form-control" placeholder="搜索用户（用户名、邮箱、手机号）">
+          </div>
+          <div style="border: 1px solid #e3e8f4; border-radius: 8px; max-height: 300px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead style="background: #f8fafc;">
+                <tr>
+                  <th style="padding: 10px; text-align: left; font-weight: 600; font-size: 0.9rem;">用户名</th>
+                  <th style="padding: 10px; text-align: left; font-weight: 600; font-size: 0.9rem;">邮箱</th>
+                  <th style="padding: 10px; text-align: left; font-weight: 600; font-size: 0.9rem;">手机号</th>
+                  <th style="padding: 10px; text-align: center; font-weight: 600; font-size: 0.9rem; width: 80px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="addUserTableBody">
+                <!-- 用户列表 -->
+              </tbody>
+            </table>
+            <div id="addUserEmpty" style="padding: 30px; text-align: center; color: #64748b; display: none;">
+              <i class="bi bi-search" style="font-size: 1.5rem; display: block; margin-bottom: 8px; opacity: 0.5;"></i>
+              <p>未找到匹配的用户</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-close="addWhitelistUserModal">取消</button>
         </div>
       </div>
     </div>

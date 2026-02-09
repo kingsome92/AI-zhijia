@@ -25,6 +25,14 @@
   box-sizing: border-box;
 }
 
+/* 确保 header 不受影响 */
+.header-component,
+.header-container,
+.main-nav,
+.nav-list {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   color: var(--text-color);
