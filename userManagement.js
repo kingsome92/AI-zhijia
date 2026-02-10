@@ -28,6 +28,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // 用户数据存储键
   const USERS_STORAGE_KEY = 'users';
+
+  function escapeHtml(str) {
+    if (str == null) return '';
+    const s = String(str);
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
   
   // 加载用户数据（优先从localStorage，否则使用默认数据）
   function loadUsers() {
@@ -129,19 +135,21 @@ document.addEventListener("DOMContentLoaded", function() {
       // 来源标签样式
       const sourceClass = user.source === "后台" ? "backend" : "system";
       
+      const phoneVal = user.phone || '-';
+      const dateVal = user.registerDate || '-';
       row.innerHTML = `
         <td>
           <input type="checkbox" class="user-checkbox" data-user-id="${user.id}" ${isSelected ? 'checked' : ''}>
         </td>
         <td>${user.id}</td>
-        <td>${user.username}</td>
-        <td>${user.email}</td>
-        <td>${user.phone || '-'}</td>
+        <td title="${escapeHtml(user.username)}">${escapeHtml(user.username)}</td>
+        <td title="${escapeHtml(user.email)}">${escapeHtml(user.email)}</td>
+        <td title="${escapeHtml(phoneVal)}">${escapeHtml(phoneVal)}</td>
         <td>${user.level || 0}</td>
         <td>${user.role || '-'}</td>
         <td>${user.type || '-'}</td>
         <td><span class="source-badge ${sourceClass}">${user.source || '系统'}</span></td>
-        <td><span class="time-display">${user.registerDate || '-'}</span></td>
+        <td title="${escapeHtml(dateVal)}"><span class="time-display">${escapeHtml(dateVal)}</span></td>
         <td><span class="status-badge ${statusClass}">${statusText}</span></td>
         <td>
           <button class="btn" onclick="editUser(${user.id})"><i class="bi bi-pencil"></i> 编辑</button>
