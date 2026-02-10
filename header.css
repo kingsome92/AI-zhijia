@@ -268,7 +268,7 @@ main h3 {
   position: relative;
   z-index: 100;
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .header-container {
@@ -306,12 +306,12 @@ main h3 {
   opacity: 0.9;
 }
 
-/* 主导航样式 */
+/* 主导航样式 - overflow: visible 以便下拉菜单不被裁剪 */
 .main-nav {
   flex: 1;
   margin: 0 20px;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .nav-list {
@@ -321,7 +321,7 @@ main h3 {
   margin: 0;
   padding: 0;
   gap: 6px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .nav-item {
