@@ -181,6 +181,7 @@ body {
 
 .user-table {
   width: 100%;
+  min-width: 900px;
   border-collapse: collapse;
 }
 
@@ -189,6 +190,41 @@ body {
   padding: 1rem;
   text-align: left;
   border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+/* 表格单元格文本溢出：用户名、邮箱、手机号、注册时间 */
+.user-table td:nth-child(3),
+.user-table td:nth-child(4),
+.user-table td:nth-child(5),
+.user-table td:nth-child(10) {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-table td:nth-child(4) {
+  max-width: 180px;
+}
+
+/* 操作列：按钮组增加间距，设定最小宽度避免挤压 */
+.user-table th:last-child,
+.user-table td:last-child {
+  min-width: 260px;
+  white-space: normal;
+}
+
+.user-table td:last-child {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.user-table td:last-child .btn {
+  flex-shrink: 0;
 }
 
 .user-table th {
@@ -567,6 +603,18 @@ body {
   .user-table td {
     padding: 0.75rem;
     font-size: 0.9rem;
+  }
+
+  .user-table th:last-child,
+  .user-table td:last-child {
+    min-width: 220px;
+  }
+
+  .user-table td:nth-child(3),
+  .user-table td:nth-child(4),
+  .user-table td:nth-child(5),
+  .user-table td:nth-child(10) {
+    max-width: 120px;
   }
 
   .batch-operations {
