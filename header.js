@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 下拉菜单点击事件委托
   document.addEventListener('click', function(e) {
-    console.log('点击事件触发:', e.target, e.target.closest('.nav-link'));
     // 如果点击的是下拉菜单项，直接跳转，不处理下拉菜单的显示/隐藏
     if (e.target.closest('.dropdown-item')) {
       // 关闭所有下拉菜单
@@ -77,12 +76,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 切换当前下拉菜单
             if (isVisible) {
-              console.log('关闭下拉菜单');
               dropdownMenu.style.opacity = '0';
               dropdownMenu.style.visibility = 'hidden';
               dropdownMenu.style.transform = 'translateY(8px)';
             } else {
-              console.log('打开下拉菜单', dropdownMenu);
               dropdownMenu.style.opacity = '1';
               dropdownMenu.style.visibility = 'visible';
               dropdownMenu.style.transform = 'translateY(0)';
